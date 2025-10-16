@@ -17,9 +17,8 @@ jobs:
 
   build-push:
     needs: [lint-test]
-    uses: libops/.github/.github/workflows/build-push-ghcr.yaml@main
+    uses: lehigh-university-libraries/.github/.github/workflows/build-push-ghcr.yaml@main
     permissions:
       contents: read
       packages: write
     secrets: inherit
-
