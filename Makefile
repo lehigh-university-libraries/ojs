@@ -9,13 +9,7 @@ build: deps
 	docker compose build
 
 lint:
-	@if command -v yq > /dev/null 2>&1; then \
-		echo "Running yq validation on YAML files..."; \
-		yq . **/*.yml > /dev/null; \
-	else \
-		echo "yq not found, skipping YAML validation"; \
-	fi
-
+	@docker compose config --format json| jq -e .services.ojs.image | grep lehigh
 	@if command -v hadolint > /dev/null 2>&1; then \
 		echo "Running hadolint on Dockerfiles..."; \
 		find . -name "Dockerfile" | xargs hadolint; \
