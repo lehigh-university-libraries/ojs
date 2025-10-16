@@ -21,7 +21,7 @@ secrets:
 
 services:
   init:
-    image: islandora/base:6.0.1@sha256:34c281449a339dbce75f784da7dca237a3325022868d89ab5cf6d6d8e0ca24a1
+    image: islandora/base:6.0.2@sha256:9cf768c05333d1c0a8a82d2c70ff608b105477d7d26aeed0600c9804fa8e1e6a
     restart: no
     volumes:
       - ./secrets:/secrets:rw
@@ -53,7 +53,7 @@ services:
       mariadb:
         condition: service_started
   mariadb:
-    image: islandora/mariadb:6.0.1@sha256:335df4225634f14095b337847e541d65b5abfa2fe051c7e2b93fae447cac1e58
+    image: islandora/mariadb:6.0.2@sha256:d74ea71918d631891466494f2059b301b5421dbc130c8a0a7c94d8d7f1ea6fa2
     volumes:
       - mariadb-data:/var/lib/mysql:rw
     secrets:

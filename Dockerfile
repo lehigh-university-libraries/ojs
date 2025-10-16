@@ -1,4 +1,4 @@
-FROM islandora/nginx:6.0.1@sha256:20d8b36e812c60bfabccdbfbee0f40d46733df921a4ea9de0a2fa943f88f4fb5
+FROM islandora/nginx:6.0.2@sha256:cc53601a1cf1d800f831ba7af77ec2de45dfb2c166b00c9d33e39e6f4f7a6f0b
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
