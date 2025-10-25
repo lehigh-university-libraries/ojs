@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-max_attempts=10
+max_attempts=25
 attempt=0
 
 while [ $attempt -lt $max_attempts ]; do

@@ -16,7 +16,7 @@ ARG \
     # renovate: datasource=github-tags depName=ojs packageName=pkp/ojs
     OJS_VERSION=3_5_0-1 \
     # renovate: datasource=repology depName=alpine_3_22/php83
-    PHP_VERSION=8.3.26-r0 \
+    PHP_VERSION=8.3.27-r0 \
     # renovate: datasource=repology depName=alpine_3_22/poppler-utils
     POPPLER_VERSION=25.04.0-r0
 
