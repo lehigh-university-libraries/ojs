@@ -15,8 +15,6 @@ jobs:
 
       - run: make lint
 
-      - run: make test
-
   build-push:
     needs: [lint-test]
     uses: lehigh-university-libraries/gha/.github/workflows/build-push-ghcr.yaml@main

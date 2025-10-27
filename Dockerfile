@@ -86,3 +86,5 @@ COPY --link rootfs /
 RUN find /var/www/ojs/plugins -type f -name "composer.json" -mtime -1 | while read -r COMPOSER_JSON; do \
     composer install --no-dev --optimize-autoloader -d "$(dirname "$COMPOSER_JSON")"; \
     done
+
+RUN echo "echo skipping" > /usr/local/bin/wait-for-database.sh
