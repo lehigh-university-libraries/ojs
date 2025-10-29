@@ -1,0 +1,21 @@
+[Unit]
+Description=OJS
+BindsTo=docker.service
+After=docker.service
+StartLimitIntervalSec=120
+StartLimitBurst=3
+
+[Service]
+User=root
+Group=root
+Type=oneshot
+WorkingDirectory=/opt/ojs.docker
+ExecStartPre=touch /opt/ojs.docker/rollout.lock
+ExecStart=/usr/bin/docker compose up -d
+ExecStartPost=rm /opt/ojs.docker/rollout.lock
+Restart=on-failure
+RestartSec=15s
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
