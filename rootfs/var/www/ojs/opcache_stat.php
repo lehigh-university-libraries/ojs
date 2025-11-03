@@ -1,6 +1,6 @@
 <?php
 
-if ($_SERVER['REMOTE_ADDR'] !== '127.0.0.1') {
+if (!str_starts_with($_SERVER['REMOTE_ADDR'], '128.180.')) {
     http_response_code(403);
     die('Access denied');
 }

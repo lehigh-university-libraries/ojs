@@ -1,0 +1,26 @@
+volumes:
+  mariadb-data: {}
+
+secrets:
+  DB_ROOT_PASSWORD:
+    file: ./secrets/DB_ROOT_PASSWORD
+services:
+  init:
+    volumes:
+      - ./docker-compose.override.yaml:/docker-compose.override.yaml:ro
+  ojs:
+    environment:
+      OJS_ENABLE_HTTPS: "false"
+    secrets:
+      - source: DB_ROOT_PASSWORD
+    depends_on:
+      mariadb:
+        condition: service_started
+  mariadb:
+    image: islandora/mariadb:6.0.2@sha256:d74ea71918d631891466494f2059b301b5421dbc130c8a0a7c94d8d7f1ea6fa2
+    ports:
+      - 3366:3306
+    volumes:
+      - mariadb-data:/var/lib/mysql:rw
+    secrets:
+      - source: DB_ROOT_PASSWORD
