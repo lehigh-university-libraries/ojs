@@ -1,0 +1,101 @@
+/**
+ * @file  plugins/themes/lrsj/styles/pages/about.less
+ * @brief Custom styles for the About page
+ */
+
+.pkp_page_about {   /* scope styles only to About page */
+  
+  /* Shared heading style */
+  h1, h2, h3 {
+    color: @primary;
+    font-weight: 700;
+  }
+
+  /* Dropdowns (reuse FAQ style) */
+  .lrsj-faq-list {
+    display: grid;
+    gap: 1rem;
+    max-width: 70ch;
+    margin: 2rem auto;
+  }
+
+  .lrsj-faq-item {
+    border: 1px solid fade(@primary, 20%);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .lrsj-faq-item > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    background: @lightBrown;
+    color: @primary;
+    font-weight: 600;
+    position: relative;
+  }
+
+  .lrsj-faq-item > summary::-webkit-details-marker { display: none; }
+
+  .lrsj-faq-item > summary:after {
+    content: "▾";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    transition: transform .2s ease;
+  }
+
+  .lrsj-faq-item[open] > summary:after {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  .lrsj-faq-item > div {
+    padding: .75rem 1.25rem 1rem;
+  }
+
+  .lrsj-faq-item p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: clamp(1rem, .3vw + .95rem, 1.15rem);
+  }
+  
+   .lrsj-about-card {
+    background: #f6efe8;                 
+    border-radius: 14px;              
+    box-shadow: 0 18px 40px rgba(0,0,0,.08); 
+    padding: 2rem;
+    max-width: 100%;    
+    margin: 2rem 0;                
+  }
+
+  .lrsj-about-card h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: @primary;                  
+    font-weight: 700;
+  }
+
+  .lrsj-about-card h2:first-of-type {
+    margin-top: 0;  /* tighten top of first heading */
+  }
+
+  .lrsj-about-card p {
+    font-size: clamp(1rem, .3vw + .95rem, 1.15rem);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+}
+
+.pkp_page_about .lrsj-faq-item ul {
+  margin: 0.5rem 0 0.5rem 1.5rem;   /* space + indent */
+  padding: 0;
+  list-style: disc;                 /* standard bullet points */
+}
+
+.pkp_page_about .lrsj-faq-item li {
+  margin-bottom: 0.4rem;
+  line-height: 1.55;
+  font-size: clamp(1rem, .3vw + .95rem, 1.15rem);
+}

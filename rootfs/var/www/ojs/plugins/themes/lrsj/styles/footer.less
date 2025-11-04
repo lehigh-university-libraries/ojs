@@ -1,0 +1,96 @@
+/**
+ * LRSJ Footer — stable version with full-bleed appearance
+ * Uses the "box-shadow bleed" trick (no layout hacks, no overflow issues).
+ */
+
+/* -------- Colors fallbacks -------- */
+@lrsjBrown:  #5b3924;     
+@lrsjYellow: @accent;     
+
+/* Make the footer span the full viewport width */
+.pkp_structure_footer {
+  background: @lrsjBrown;
+  color: #fff;
+
+  /* viewport breakout so it reaches page edges */
+  position: relative !important;
+  width: 100vw !important;
+  left: 50% !important; 
+  right: 50% !important; 
+  margin-left: -50vw !important; 
+  margin-right: -50vw !important;
+
+  /* avoid tiny horizontal scrollbars on some browsers */
+  overflow-x: clip !important;  /* or overflow-x: hidden; */
+  border: 0 !important;
+}
+
+/* Center your content inside the full-width footer */
+.pkp_structure_footer_wrapper {
+  max-width: 100% !important;     /* your page width */
+  margin: 0 auto !important;
+  padding: 0 !important;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+/* -------- Grid layout -------- */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: 0% 12%;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Headings */
+.footer-title,
+.footer-heading {
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.footer-title { font-size: 1.25rem; }
+
+/* Text blocks */
+.footer-text { color: rgba(255,255,255,.9); margin-bottom: 1rem; }
+
+/* Lists */
+.footer-list { list-style: none; padding: 0; margin: 0; }
+.footer-list li { margin-bottom: .5rem; border: none;}
+
+/* Links */
+.footer-link,
+.pkp_structure_footer a {
+  color: #fff;
+  text-decoration: none;
+}
+.footer-link:hover,
+.pkp_structure_footer a:hover { color: @lrsjYellow; }
+
+/* Icons */
+.footer-icons { display: flex; gap: 1rem; }
+.footer-icon-link { color: #fff; font-size: 1.25rem; line-height: 1; }
+.footer-icon-link:hover { color: @lrsjYellow; }
+
+/* Address block */
+.footer-address p { margin: 0 0 .5rem; }
+
+/* Bottom row */
+.footer-bottom {
+  margin-top: 2rem;
+  margin: 0% 12%;
+  padding-top: 1rem;
+  border-top: 1px solid fade(@primary, 30%);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.pkp_brand_footer img { max-width: 110px; height: auto; filter: brightness(0) invert(1);}
+.pkp_structure_content { overflow: visible; } 
