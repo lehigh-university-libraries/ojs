@@ -2,19 +2,26 @@
 
 Dockerized deployment of [Open Journal Systems](https://pkp.sfu.ca/software/ojs/) based on the [Islandora Buildkit](https://github.com/Islandora-Devops/isle-buildkit) nginx base image.
 
+# Requirements
+
+- [Docker 24.0+](https://docs.docker.com/get-docker/) **Referring to the Docker Engine version, not Docker Desktop**.
+- [Docker Compose](https://docs.docker.com/compose/install/linux/) **Already included in Mac OS with Docker**
+
 ## Quick Start
 
-1. Generate secrets:
+1. Setup repo
 ```bash
-docker compose up init
+git clone https://github.com/lehigh-university-libraries/ojs
+cd ojs
+cp docker-compose.override-sample.yaml docker-compose.override.yaml
 ```
 
 2. Start the containers:
 ```bash
-docker compose up -d
+make run
 ```
 
-3. Access OJS at http://localhost
+3. Access OJS at http://localhost:8888
 
 The installation will run automatically on first startup. The default admin credentials are:
 - Username: `admin` (configurable via `OJS_ADMIN_USERNAME`)

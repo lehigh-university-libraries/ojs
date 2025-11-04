@@ -40,10 +40,11 @@ services:
     ports:
       - 8888:80
     environment:
-      OJS_OAI_REPOSITORY_ID: ${DOMAIN}
+      OJS_OAI_REPOSITORY_ID: ${DOMAIN:-localhost}
       OJS_ENABLE_BEACON: 1
-      DB_HOST: ${DB_HOST}
-      OJS_SMTP_SERVER: ${OJS_SMTP_SERVER}
+      DB_HOST: ${DB_HOST:-mariadb}
+      OJS_SMTP_SERVER: ${OJS_SMTP_SERVER:-}
+      OJS_ENABLE_HTTPS: "true"
     networks:
       - default
     secrets:
