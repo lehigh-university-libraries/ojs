@@ -26,7 +26,7 @@
 			  {assign var=aboutHtml value=$currentContext->getLocalizedData('description')}
 			  {if $aboutHtml}
 				<div class="lrsj-about-text">
-				  {$aboutHtml}
+				  {$aboutHtml|strip_unsafe_html}
 				</div>
 			  {/if}
 
