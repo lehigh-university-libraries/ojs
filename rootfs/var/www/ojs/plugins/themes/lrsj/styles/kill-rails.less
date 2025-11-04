@@ -1,0 +1,11 @@
+/* Remove the vertical rails drawn by the Default theme */
+.pkp_structure_main::before,
+.pkp_structure_main::after,
+.pkp_structure_content::before,
+.pkp_structure_content::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Make sure the footer sits above anything else, just in case */
+.pkp_structure_footer_wrapper { position: relative; z-index: 2; }

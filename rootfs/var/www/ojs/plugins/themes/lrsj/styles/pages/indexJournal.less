@@ -1,0 +1,549 @@
+/**
+ * @file  plugins/themes/default/styles/pages/indexJournal.less
+ *
+ * Copyright (c) 2014-2021 Simon Fraser University
+ * Copyright (c) 2003-2021 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @brief Styles applying to the front page of the journal
+ * @link templates/frontend/pages/indexJournal.tpl
+ */
+
+//  @import "../index.less";
+
+
+.pkp_page_index {
+
+	.homepage_image,
+	.additional_content {
+		margin-left: -@base;
+		margin-right: -@base;
+
+		@media (min-width: @screen-phone) {
+			margin-left: -@double;
+			margin-right: -@double;
+		}
+
+		@media (min-width: @screen-desktop) {
+			margin-left: -@triple;
+			margin-right: -@triple;
+		}
+	}
+
+	.homepage_image {
+
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+
+		@media (min-width: @screen-desktop) {
+			margin-top: -@triple; // flush with top nav
+		}
+	}
+
+	// .homepage_about {
+	// 	padding-top: @triple;
+	// 	padding-bottom: @triple;
+
+	// 	h2 {
+	// 		margin-top: -@base
+	// 	}
+	// }
+
+	.cmp_announcements {
+		.pkp_helpers_clear();
+		border-top: @bg-border;
+		border-bottom: @bg-border;
+
+		h2 {
+			&:extend(.pkp_screen_reader all);
+		}
+
+		> .obj_announcement_summary {
+			display: block;
+			position: relative;
+			padding: @triple @base;
+		}
+
+		.more {
+			position: relative;
+
+			.obj_announcement_summary {
+				padding: @base;
+			}
+
+			h4 {
+				font-size: @font-sml;
+			}
+		}
+
+		@media(min-width: @screen-phone) {
+
+			> .obj_announcement_summary,
+			.more .obj_announcement_summary {
+				padding-left: @double;
+				padding-right: @double;
+			}
+		}
+
+		@media(min-width: @screen-tablet) {
+
+			> .obj_announcement_summary {
+				float: left;
+				width: 65%;
+
+				// Right border
+				&:before {
+					content: ' ';
+					position: absolute;
+					top: 0;
+					right: -1px;
+					width: 1px;
+					height: 100%;
+					border-left: @bg-border;
+				}
+			}
+
+			.more {
+				float: right;
+				width: 35%;
+				padding-top: @double;
+				padding-bottom: @double;
+
+				// Left border
+				&:before {
+					content: ' ';
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 1px;
+					height: 100%;
+					border-left: @bg-border;
+				}
+			}
+		}
+
+		@media(min-width: @screen-desktop) {
+
+			> .obj_announcement_summary,
+			.more .obj_announcement_summary {
+				padding-left: @triple;
+				padding-right: @triple;
+			}
+		}
+	}
+
+	.current_issue {
+
+		.current_issue_title {
+			margin: @double 0;
+			font-weight: @bold;
+		}
+
+		.read_more {
+			.cmp_button_text(@fa-var-chevron-right);
+			margin-bottom: @double;
+		}
+
+		@media(min-width: @screen-tablet) {
+
+			.section:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.additional_content {
+		padding: @triple @base 0 @base;
+		border-top: @bg-border;
+
+		@media (min-width: @screen-phone) {
+			padding-left: @double;
+			padding-right: @double;
+		}
+
+		@media (min-width: @screen-desktop) {
+			padding-left: @triple;
+			padding-right: @triple;
+		}
+
+		> p:first-child {
+			margin-top: 0;
+		}
+
+		> p:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	@media(min-width: @screen-tablet) {
+
+		.cmp_announcements + .additional_content {
+			border-top: none;
+		}
+	}
+}
+
+
+/* --- Home: About + Process --- */
+body.pkp_page_index {                     /* scope to the home page only */
+  .lrsj-hero { background: #f6efe8; padding: 3rem 0; }
+
+  .lrsj-about-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;   /* left wider than right */
+    gap: 2rem;
+    align-items: start;
+	margin: 0 12%;
+  }
+
+  .lrsj-h1 { margin: 0 0 1rem; line-height: 1.2; }
+  .lrsj-h2 { margin: 0 0 1rem; line-height: 1.3; }
+
+  .lrsj-process {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(0,0,0,.08);
+    padding: 1.5rem 1.75rem;
+  }
+
+  .lrsj-steps { list-style: none; margin: 0; padding: 0; }
+  .lrsj-steps li {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 1rem;
+    align-items: start;
+    margin: 1rem 0.25rem;
+  }
+
+
+	.lrsj-steps li > div strong {
+	margin-bottom: 0.15rem;   
+	line-height: 1.2;
+	}
+
+	.lrsj-steps li > div p {
+	margin-top: 0;            /* remove the big default top margin */
+	margin-bottom: 0.25rem;         /* or 0.25rem if you want a touch of air */
+	}
+
+  .lrsj-stepnum {
+    display: inline-grid; place-items: center;
+    width: 44px; height: 44px; border-radius: 999px;
+    background: @accent;                 
+    color: #111; font-weight: 700;
+  }
+
+  @media (max-width: 960px) {
+    .lrsj-about-grid { grid-template-columns: 1fr; }
+    .lrsj-process { order: 2; margin-top: 1rem; }
+  }
+}
+
+/* Wider, fluid container just for the home hero band */
+.pkp_page_index .lrsj-hero {
+  /* viewport breakout so it reaches page edges */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+
+  /* avoid tiny horizontal scrollbars on some browsers */
+  overflow-x: clip;  /* or overflow-x: hidden; */
+  border: 0;
+}
+
+
+/* Tighten header → content on the HOME page */
+.pkp_page_index .pkp_structure_head {     /* header block */
+  margin-bottom: 0 !important;
+}
+
+.pkp_page_index .pkp_structure_content,
+.pkp_page_index .pkp_structure_main,
+.pkp_page_index .page_index_journal {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+
+/* Bigger hero typography + @primary headings */
+.pkp_page_index .lrsj-h1 {
+  font-size: clamp(2.2rem, 2.2vw + 1rem, 3rem) !important;  /* ~35–48px */
+  line-height: 1.2;
+  color: @primary !important;
+  font-weight: 800;
+  margin: 0 0 1rem;
+}
+
+.pkp_page_index .lrsj-h2 {
+  font-size: clamp(1.35rem, 1.2vw + 0.8rem, 1.8rem) !important; /* ~22–29px */
+  line-height: 1.3;
+  color: @primary !important;
+  font-weight: 700;
+  margin: 0 0 .75rem;
+}
+
+/* Body copy in the About text */
+.pkp_page_index .lrsj-about-text p {
+  font-size: clamp(1.05rem, .35vw + 1rem, 1.25rem) !important; /* ~17–20px */
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+/* Step titles use @primary and sit closer to their paragraph */
+.pkp_page_index .lrsj-steps li > div strong {
+  display: block;
+  margin-bottom: .15rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: @primary !important;
+  font-size: clamp(1.05rem, .45vw + 1rem, 1.5rem) !important;
+}
+.pkp_page_index .lrsj-steps li > div p {
+  margin: 0;
+  line-height: 1.45;
+  font-size: clamp(.98rem, .25vw + .92rem, 1.08rem);
+}
+
+/* Bigger body text in hero About + Process section */
+.pkp_page_index .lrsj-hero {
+  font-size: clamp(1.1rem, 0.4vw + 1.5rem, 2rem) !important; /* ~18–22px */
+  line-height: 1.65;
+}
+
+/* Ensure all paragraphs inherit the larger size */
+.pkp_page_index .lrsj-hero p {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+/* Also enlarge step descriptions */
+.pkp_page_index .lrsj-steps li > div p {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+.pkp_page_index .lrsj-about-text {
+  font-size: clamp(1.25rem, 0.5vw + 1.1rem, 1.6rem) !important; /* ~20–26px */
+  line-height: 1.75 !important;
+}
+
+/* ===== Colors (fallbacks if not already defined) ===== */
+@primary:        #5b3924;   // your brown
+@accent:         #f7c126;   // your yellow
+@lightBrown:     #f6efe8;   // soft band background
+@ctaStart:       #5b3924;
+@ctaEnd:         #8b5a3c;
+
+/* ===== Shared utilities ===== */
+.lrsj-center { text-align:center; }
+.mb-12 { margin-bottom: 3rem; }
+
+/* Headings + lead */
+.lrsj-h2 {
+  color: @primary;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.3vw + 1rem, 2rem);
+  line-height: 1.25;
+  margin: 0 0 0.75rem;
+}
+.lrsj-lead {
+  font-size: clamp(1.05rem, .35vw + 1rem, 1.25rem);
+  line-height: 1.6;
+  margin: 0 auto;
+  max-width: 60ch;
+  justify-content: center;
+  
+}
+
+/* ===== Review Process ===== */
+.lrsj-review {
+  background: @lightBrown;
+  padding: 3rem 0;
+}
+.lrsj-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin: 0 12%;
+}
+@media (min-width: 768px) {
+  .lrsj-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+.lrsj-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.08);
+  padding: 1.5rem 1.75rem;
+}
+.lrsj-card h3 {
+  color: @primary;
+  font-weight: 700;
+  margin: 0 0 .4rem;
+  font-size: clamp(1.05rem, .45vw + .95rem, 1.25rem);
+}
+.lrsj-card p {
+  margin: 0;
+  font-size: clamp(1rem, .3vw + .95rem, 1.15rem);
+  line-height: 1.55;
+}
+.lrsj-stepnum {
+  display: inline-grid; place-items: center;
+  width: 48px; height: 48px; border-radius: 999px;
+  background: @accent; color: #111; font-weight: 800;
+  font-size: 1.125rem; margin-bottom: .75rem;
+}
+
+/* FAQ  */
+.lrsj-faq { background: #fff; padding: 3rem 0; }
+.lrsj-faq-list { display: grid; gap: 1rem; max-width: 70ch; margin: 0 auto; }
+.lrsj-faq-item {
+  border: 1px solid fade(@primary, 20%);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.lrsj-faq-item > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 1rem 1.25rem;
+  background: @lightBrown;
+  color: @primary;
+  font-weight: 600;
+  position: relative;
+}
+.lrsj-faq-item > summary::-webkit-details-marker { display: none; }
+.lrsj-faq-item > summary:after {
+  content: "▾";
+  position: absolute; right: 1rem; top: 50%; transform: translateY(-50%) rotate(0deg);
+  transition: transform .2s ease;
+}
+.lrsj-faq-item[open] > summary:after { transform: translateY(-50%) rotate(180deg); }
+.lrsj-faq-item > div { padding: .75rem 1.25rem 1rem; }
+.lrsj-faq-item p { margin: 0; line-height: 1.6; font-size: clamp(1rem, .3vw + .95rem, 1.15rem); }
+
+/* ===== Call to Action ===== */
+.lrsj-cta {
+  padding: 3rem 0;
+  background: linear-gradient(135deg, @ctaStart 0%, @ctaEnd 100%);
+  color: #fff;
+  text-align: center;
+}
+.lrsj-cta-title {
+  font-weight: 800;
+  font-size: clamp(1.75rem, 1.6vw + 1rem, 2.25rem);
+  margin: 0 0 .5rem;
+}
+.lrsj-cta-text {
+  font-size: clamp(1.05rem, .35vw + 1rem, 1.25rem);
+  line-height: 1.6;
+  max-width: 60ch; margin: 0 auto 1.25rem;
+}
+.lrsj-cta-btn {
+  display: inline-block;
+  background: @accent;
+  color: @primary;
+  font-weight: 800;
+  padding: .75rem 1.5rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+.lrsj-cta-btn:hover { filter: brightness(0.95); }
+
+
+/* Wider, fluid container just for the home hero band */
+.pkp_page_index .lrsj-review {
+  /* viewport breakout so it reaches page edges */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+
+  /* avoid tiny horizontal scrollbars on some browsers */
+  overflow-x: clip;  /* or overflow-x: hidden; */
+  border: 0;
+}
+
+
+/* Wider, fluid container just for the home hero band */
+.pkp_page_index .lrsj-cta {
+  /* viewport breakout so it reaches page edges */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+
+  /* avoid tiny horizontal scrollbars on some browsers */
+  overflow-x: clip;  /* or overflow-x: hidden; */
+  border: 0;
+}
+
+/* Center the intro line in Review section and match About text size */
+.pkp_page_index  .lrsj-center {
+  display: grid;              /* easy centering */
+  place-items: center;        /* centers children horizontally */
+  text-align: center;
+}
+
+.pkp_page_index .lrsj-lead {
+  max-width: 60ch;            /* keeps a readable line length */
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+
+  /* make it as large as your About text – tweak if you used a different size */
+  font-size: clamp(1.25rem, 0.5vw + 1.1rem, 1.6rem) !important; /* ~20–26px */
+  line-height: 1.75 !important;;
+}
+
+/* === Submit Research (Call to Action) === */
+.pkp_page_index .lrsj-cta {
+  padding: 4rem 2rem;                 /* more breathing room top/bottom */
+  text-align: center;
+}
+
+.pkp_page_index .lrsj-cta-title {
+  font-size: clamp(2rem, 2.5vw + 1rem, 2.75rem); /* ~32–44px */
+  line-height: 1.3;
+  margin-bottom: 1rem;
+}
+
+.pkp_page_index .lrsj-cta-text {
+  font-size: clamp(1.25rem, 0.6vw + 1rem, 1.5rem); /* ~20–24px */
+  line-height: 1.75;
+  margin: 0 auto 2rem;                /* center & give more gap before button */
+  max-width: 65ch;                    /* keep line length readable */
+}
+
+.pkp_page_index .lrsj-cta-btn {
+  font-size: 1.125rem;                 /* slightly larger button text */
+  padding: 1rem 2rem;                  /* bigger button */
+}
+
+
+/* Inline "Current Issue" button under About section */
+.lrsj-inline-btn {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 1.125rem;
+  padding: 0.75rem 1.5rem;
+  background: @accent;
+  color: @primary !important;
+  font-weight: 800;
+  border-radius: 999px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.lrsj-inline-btn:hover {
+  filter: brightness(0.95);
+}

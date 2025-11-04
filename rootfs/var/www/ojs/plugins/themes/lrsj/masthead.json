@@ -1,0 +1,51 @@
+[
+  {
+    "role": "Editor(s)-in-Chief",
+    "name": "Kimiasadat Mirlohi",
+    "affiliation": "Department of Chemical and Biomolecular Engineering",
+    "email": "kim422@lehigh.edu",
+    "ID": "kim422"
+  },
+  {
+    "role": "Editor(s)-in-Chief",
+    "name": "Abolfazl Salehi Moghaddam ",
+    "affiliation": "Department of Bioengineering",
+    "email": "abs421@lehigh.edu",
+    "ID": "abs421"
+  },
+  {
+    "role": "Managing Editor",
+    "name": "Adhika Setiawan",
+    "affiliation": "Department of Chemical and Biomolecular Engineering",
+    "email": "ans819@lehigh.edu",
+    "ID": "ans819"
+  },
+  {
+    "role": "Editor of Content",
+    "name": "F. Gerardo Ortega Oviedo",
+    "affiliation": "Department of Bioengineering",
+    "email": "feo222@lehigh.edu",
+    "ID": "feo222"
+  },
+  {
+    "role": "Editor of Peer Review",
+    "name": "Ziang Li",
+    "affiliation": "Department of Chemical and Biomolecular Engineering",
+    "email": "zil619@lehigh.edu",
+    "ID": "zil619"
+  },
+  {
+    "role": "Web and Digital Manager",
+    "name": "Kylie S. Frew",
+    "affiliation": "Department of Mechanical Engineering and Mechanics",
+    "email": "ksf224@lehigh.edu",
+    "ID": "ksf224"
+  },
+  {
+    "role": "Operations Manager",
+    "name": "Francesca Morrell",
+    "affiliation": "Department of Bioengineering",
+    "email": "fmm324@lehigh.edu",
+    "ID": "fmm324"
+  }
+]
