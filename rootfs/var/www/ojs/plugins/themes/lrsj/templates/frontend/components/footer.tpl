@@ -61,33 +61,3 @@
     </div>
   </div>
 </footer>
-
-
-{* === DROPDOWN NAV SCRIPT === *}
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".nav-list .dropdown > a").forEach(function (link) {
-    link.addEventListener("click", function (e) {
-      e.preventDefault();
-      const parent = link.parentElement;
-
-      // Close other open dropdowns
-      document.querySelectorAll(".nav-list .dropdown.open").forEach(function (el) {
-        if (el !== parent) el.classList.remove("open");
-      });
-
-      // Toggle current dropdown
-      parent.classList.toggle("open");
-    });
-  });
-
-  // Close dropdowns when clicking outside
-  document.addEventListener("click", function (e) {
-    if (!e.target.closest(".nav-list .dropdown")) {
-      document.querySelectorAll(".nav-list .dropdown.open").forEach(function (el) {
-        el.classList.remove("open");
-      });
-    }
-  });
-});
-</script>
