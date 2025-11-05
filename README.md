@@ -7,7 +7,7 @@ Dockerized deployment of [Open Journal Systems](https://pkp.sfu.ca/software/ojs/
 - [Docker 24.0+](https://docs.docker.com/get-docker/) **Referring to the Docker Engine version, not Docker Desktop**.
 - [Docker Compose](https://docs.docker.com/compose/install/linux/) **Already included in Mac OS with Docker**
 
-## Quick Start
+## Quick Start (local development)
 
 1. Setup repo
 ```bash
@@ -18,13 +18,13 @@ cp docker-compose.override-sample.yaml docker-compose.override.yaml
 
 2. Start the containers:
 ```bash
-make run
+make up
 ```
 
 3. Access OJS at http://localhost:8888
 
 The installation will run automatically on first startup. The default admin credentials are:
-- Username: `admin` (configurable via `OJS_ADMIN_USERNAME`)
+- Username: `admin` (configurable via `OJS_ADMIN_USERNAME` on the OJS service)
 - Password: Contents of `./secrets/OJS_ADMIN_PASSWORD`
 - Email: `admin@example.com` (configurable via `OJS_ADMIN_EMAIL`)
 
