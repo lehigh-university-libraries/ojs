@@ -9,8 +9,10 @@
         <p class="footer-text">Promoting academic excellence in engineering through peer-reviewed student research.</p>
 
         <div class="footer-icons">
-          <a href="https://linkedin.com/" class="footer-icon-link" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
-          <a href="https://www.instagram.com/lehighrisingscholars/" class="footer-icon-link" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com/" class="footer-icon-link" target="_blank" rel="noopener"><i
+              class="fab fa-linkedin"></i></a>
+          <a href="https://www.instagram.com/lehighrisingscholars/" class="footer-icon-link" target="_blank"
+            rel="noopener"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
 
@@ -20,9 +22,9 @@
         <ul class="footer-list">
           <li><a class="footer-link" href="{url page="index"}">Home</a></li>
           <li><a class="footer-link" href="{url page="about"}">About</a></li>
-          <li><a class="footer-link" href="{url page="about" op="submissions"}">Submit</a></li>
-          <li><a class="footer-link" href="{url page="issue" op="archive"}">Archive</a></li>
-          <li><a class="footer-link" href="{url page="about" op="editorialMasthead"}">Meet the Team</a></li>
+          <li><a class="footer-link" href="{url page="about" op="submissions" }">Submit</a></li>
+          <li><a class="footer-link" href="{url page="issue" op="archive" }">Archive</a></li>
+          <li><a class="footer-link" href="{url page="about" op="editorialMasthead" }">Meet the Team</a></li>
         </ul>
       </div>
 
@@ -30,8 +32,8 @@
       <div>
         <h4 class="footer-heading">Resources</h4>
         <ul class="footer-list">
-          <li><a class="footer-link" href="{url page="about" op="submissions"}">Author Guidelines</a></li>
-          <li><a class="footer-link" href="{url page="about" op="submissions"}">Style Template</a></li>
+          <li><a class="footer-link" href="{url page="about" op="submissions" }">Author Guidelines</a></li>
+          <li><a class="footer-link" href="{url page="about" op="submissions" }">Style Template</a></li>
           <li><a class="footer-link" href="{url page="about"}#ethics">Ethics Policy</a></li>
           <li><a class="footer-link" href="{url page="about"}#open-access">Open Access Policy</a></li>
         </ul>
@@ -60,4 +62,5 @@
       </div>
     </div>
   </div>
+  <script src="https://www.lehigh.edu/~inltswms/include/ltstemplate/js/scripts.js"></script>
 </footer>

@@ -1,4 +1,4 @@
-.PHONY: build deps lint run test
+.PHONY: build deps lint up test
 
 DOCKER_IMAGE=ghcr.io/lehigh-university-libraries/ojs:main
 
@@ -24,9 +24,9 @@ lint:
 	fi
 
 
-run: build
+up:
 	docker compose up init
 	docker compose up -d
 
-test: run
+test: up
 	./scripts/test.sh
