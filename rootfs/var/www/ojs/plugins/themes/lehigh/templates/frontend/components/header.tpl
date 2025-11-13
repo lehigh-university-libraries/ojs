@@ -17,7 +17,7 @@
                             <img src="https://lehigh.edu/~inltswms/images/logos/lehighuniversity-lts-wordmark.svg"
                                 width="300px" height="43" alt="" />
                         </div><!-- utility-nav--start -->
-                        <div class="utility-nav--mid leh-col-md-5">
+                        <div class="utility-nav--mid leh-col-md-8">
                             <div class="lehigh-navbarSupportedContent">
                                 <ul class="lehigh-d-flex lehigh-justify-content-between">
                                     <li><a href="{url page='index'}">Home</a></li>
