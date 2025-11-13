@@ -21,21 +21,48 @@
                             <div class="lehigh-navbarSupportedContent">
                                 <ul class="lehigh-d-flex lehigh-justify-content-between">
                                     <li><a href="{url page='index'}">Home</a></li>
-                                {if $isUserLoggedIn}
+
+                                    {* Primary navigation from OJS navigation system *}
+                                    {if $enableAnnouncements}
+                                        <li>
+                                            <a href="{url router=PKP\core\PKPApplication::ROUTE_PAGE page="announcement"}">
+                                                {translate key="announcement.announcements"}
+                                            </a>
+                                        </li>
+                                    {/if}
+
+                                    {if $currentJournal}
+                                        {if $currentJournal->getData('publishingMode') != \APP\journal\Journal::PUBLISHING_MODE_NONE}
+                                            <li>
+                                                <a href="{url router=PKP\core\PKPApplication::ROUTE_PAGE page="issue" op="current"}">
+                                                    {translate key="navigation.current"}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{url router=PKP\core\PKPApplication::ROUTE_PAGE page="issue" op="archive"}">
+                                                    {translate key="navigation.archives"}
+                                                </a>
+                                            </li>
+                                        {/if}
+
+                                        <li>
+                                            <a href="{url router=PKP\core\PKPApplication::ROUTE_PAGE page="about"}">
+                                                {translate key="navigation.about"}
+                                            </a>
+                                        </li>
+                                    {/if}
+
+                                    {* User navigation *}
+                                    {if $isUserLoggedIn}
                                         <li><a href="{url page="user"}">Dashboard</a></li>
                                         <li><a href="{url page="login" op="signOut"}">Logout</a></li>
-                                {else}
-                                <li>
-                                    <a href="{url page='login'}" class="nav-link">
-                                    {translate key='user.login'}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{url page='user' op='register'}" class="nav-link">
-                                    {translate key='user.register'}
-                                    </a>
-                                </li>
-                                {/if}
+                                    {else}
+                                        <li>
+                                            <a href="{url page='login'}" class="nav-link">
+                                                {translate key='user.login'}
+                                            </a>
+                                        </li>
+                                    {/if}
                                 </ul>
                             </div>
                         </div><!-- end utility-nav--mid -->
