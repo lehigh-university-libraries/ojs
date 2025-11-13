@@ -219,7 +219,6 @@
 							<div class="text-center">
 								{capture assign="rolesProfileUrl"}{url page="user" op="profile" path="roles"}{/capture}
 								<p class="mb-0">
-									{translate key="user.login.loginLabel"}
 									<a href="{url page="login" source=$rolesProfileUrl}" class="fw-semibold">
 										{translate key="user.login"}
 									</a>

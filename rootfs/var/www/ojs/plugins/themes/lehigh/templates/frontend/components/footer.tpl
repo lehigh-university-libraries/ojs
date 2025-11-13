@@ -1,3 +1,4 @@
+</div>
 <footer class="lehigh-footer" role="contentinfo">
     <div class="footer">
         <div class="lehigh-container-fluid lehigh-max-width lehigh-mx-auto">
