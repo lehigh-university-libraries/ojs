@@ -19,7 +19,7 @@ services:
       mariadb:
         condition: service_started
   mariadb:
-    image: islandora/mariadb:6.0.2@sha256:d74ea71918d631891466494f2059b301b5421dbc130c8a0a7c94d8d7f1ea6fa2
+    image: islandora/mariadb:6.0.7@sha256:b523b9cf9ba1cf1e7f7db139921ff8fe9615ba641a0f9ebdd66380a3b5383bd0
     ports:
       - 3366:3306
     volumes:
