@@ -37,6 +37,7 @@ services:
   ojs:
     image: ghcr.io/lehigh-university-libraries/ojs:main
     build: .
+    restart: on-failure:3
     ports:
       - 8888:80
     environment:
