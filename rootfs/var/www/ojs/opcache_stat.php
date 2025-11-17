@@ -6,5 +6,5 @@ if (!str_starts_with($_SERVER['REMOTE_ADDR'], '128.180.')) {
 }
 
 header('Content-Type: application/json');
-$status=opcache_get_status();
-echo json_encode($status);
+$status=opcache_get_status(FALSE);
+echo json_encode($status, JSON_PRETTY_PRINT);
