@@ -37,8 +37,7 @@
                                             {/if}
 
                                             {if $currentJournal}
-                                            {if $currentJournal->getData('publishingMode') !=
-                                            \APP\journal\Journal::PUBLISHING_MODE_NONE}
+                                            {if $currentJournal->getData('publishingMode') != $PUBLISHING_MODE_NONE}
                                             <li>
                                                 <a href="{url router=PKP\core\PKPApplication::ROUTE_PAGE page="issue" op="current" }">
                                                     {translate key="navigation.current"}
@@ -99,8 +98,7 @@
                                     {/if}
 
                                     {if $currentJournal}
-                                    {if $currentJournal->getData('publishingMode') !=
-                                    \APP\journal\Journal::PUBLISHING_MODE_NONE}
+                                    {if $currentJournal->getData('publishingMode') != $PUBLISHING_MODE_NONE}
                                     <a href="{url router=PKP\core\PKPApplication::ROUTE_PAGE page="issue" op="current" }">
                                         {translate key="navigation.current"}
                                     </a>

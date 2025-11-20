@@ -3,6 +3,8 @@
 namespace APP\plugins\themes\lehigh;
 
 use PKP\plugins\ThemePlugin;
+use APP\journal\Journal;
+use APP\core\Application;
 
 class LehighThemePlugin extends ThemePlugin {
 
@@ -12,6 +14,20 @@ class LehighThemePlugin extends ThemePlugin {
 	 * @return null
 	 */
 	public function init() {
+		// Register template hooks to pass constants to templates
+		\HookRegistry::register('TemplateManager::display', [$this, 'addTemplateData']);
+	}
+
+	/**
+	 * Add template data to make constants available in templates
+	 */
+	public function addTemplateData($hookName, $args) {
+		$templateMgr = $args[0];
+
+		// Pass Journal publishing mode constant to templates
+		$templateMgr->assign('PUBLISHING_MODE_NONE', Journal::PUBLISHING_MODE_NONE);
+
+		return false;
 	}
 
 	/**
