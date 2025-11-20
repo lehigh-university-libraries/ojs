@@ -18,8 +18,19 @@
 
                             <div class="lehigh-row lehigh-align-items-center">
                                 <div class="utility-nav--start lehigh-navbar-brand leh-col-md-4">
-                                    <img src="https://lehigh.edu/~inltswms/images/logos/lehighuniversity-lts-wordmark.svg"
-                                        width="300px" height="43" alt="" />
+                                    {if $currentJournal}
+                                        {assign var="journalLogo" value=$currentJournal->getLocalizedData('pageHeaderLogoImage')}
+                                        {if $journalLogo}
+                                            <img src="{$publicFilesDir}/{$journalLogo.uploadName|escape:"url"}" {if $journalLogo.altText}alt="{$journalLogo.altText|escape}"{else}alt="{$currentJournal->getLocalizedName()|escape}"{/if}
+                                                width="300px" />
+                                        {else}
+                                            <img src="https://lehigh.edu/~inltswms/images/logos/lehighuniversity-lts-wordmark.svg"
+                                                width="300px" height="43" alt="Lehigh University" />
+                                        {/if}
+                                    {else}
+                                        <img src="https://lehigh.edu/~inltswms/images/logos/lehighuniversity-lts-wordmark.svg"
+                                            width="300px" height="43" alt="Lehigh University" />
+                                    {/if}
                                 </div>
                                 <!-- utility-nav--start -->
                                 <div class="utility-nav--mid leh-col-md-8">
