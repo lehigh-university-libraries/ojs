@@ -46,6 +46,7 @@ services:
       DB_HOST: ${DB_HOST:-mariadb}
       OJS_SMTP_SERVER: ${OJS_SMTP_SERVER:-}
       OJS_ENABLE_HTTPS: "true"
+      OJS_BASE_URL: "https://${DOMAIN:-localhost}"
     networks:
       - default
     secrets:

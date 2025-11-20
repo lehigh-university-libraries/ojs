@@ -11,8 +11,10 @@ services:
   ojs:
     environment:
       OJS_ENABLE_HTTPS: "false"
+      OJS_BASE_URL: http://localhost:8888
     volumes:
       - ./rootfs/var/www/ojs/plugins/themes/lrsj:/var/www/ojs/plugins/themes/lrsj:ro
+      - ./rootfs/var/www/ojs/plugins/themes/lehigh:/var/www/ojs/plugins/themes/lehigh:ro
     secrets:
       - source: DB_ROOT_PASSWORD
     depends_on:

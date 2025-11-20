@@ -102,7 +102,7 @@ restful_urls = On
 {{- $cleaned := replace $temp "http://"  "" -1 -}}
 
 {{- $host  := index (split $cleaned "/") 0 -}}
-{{- $domain := index (split $host    ":") 0 -}}
+{{ $domain := index (split $host    ":") 0 }}
 allowed_hosts = '["localhost", "{{ $domain }}"]'
 
 
