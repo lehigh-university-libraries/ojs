@@ -108,7 +108,5 @@
         </div>
     </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha256-ew8UiV1pJH/YjpOEBInP1HxVvT/SfrCmwSoUzF9JIgc=" crossorigin="anonymous"></script>
-<script src="https://www.lehigh.edu/~inltswms/include/ltstemplate/js/scripts.js"></script>
 </body>
 </html>

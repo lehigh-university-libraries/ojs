@@ -6,10 +6,6 @@
 
     <body class="pkp_page_{$requestedPage|escape|default:" index"} pkp_op_{$requestedOp|escape|default:"index"}"
         dir="{$currentLocaleLangDir|escape|default:" ltr"}">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-            integrity="sha256-2FMn2Zx6PuH5tdBQDRNwrOo60ts5wWPC9R8jK67b3t4=" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://www.lehigh.edu/~inltswms/include/ltstemplate/css/lehigh-reset.min.css">
-        <link rel="stylesheet" href="https://www.lehigh.edu/~inltswms/include/ltstemplate/css/styles.min.css">
         <div class="pkp_structure_page">
             <header class="lehigh-header border-bottom">
                 <nav class="lehigh-nav lehigh-header-nav lehigh-navbar">
