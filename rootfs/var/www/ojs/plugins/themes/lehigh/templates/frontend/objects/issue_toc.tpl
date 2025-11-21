@@ -58,11 +58,9 @@
 		<div class="{if $issueCover}col-md-8 col-lg-9{else}col-12{/if}">
 			{* Description *}
 			{if $issue->hasDescription()}
-				<div class="card shadow-sm mb-3">
-					<div class="card-body">
-						<h2 class="h5 text-primary mb-3">Description</h2>
-						{$issue->getLocalizedDescription()|strip_unsafe_html}
-					</div>
+				<div class="border-bottom py-3">
+					<h2 class="h5 text-primary mb-3">Description</h2>
+					{$issue->getLocalizedDescription()|strip_unsafe_html}
 				</div>
 			{/if}
 
@@ -71,20 +69,18 @@
 				{assign var=pubId value=$issue->getStoredPubId($pubIdPlugin->getPubIdType())}
 				{if $pubId}
 					{assign var="resolvingUrl" value=$pubIdPlugin->getResolvingURL($currentJournal->getId(), $pubId)|escape}
-					<div class="card shadow-sm mb-3">
-						<div class="card-body">
-							<h3 class="h6 mb-2">
-								{$pubIdPlugin->getPubIdDisplayType()|escape}
-							</h3>
-							<div class="text-break">
-								{if $resolvingUrl}
-									<a href="{$resolvingUrl|escape}">
-										{$resolvingUrl}
-									</a>
-								{else}
-									{$pubId}
-								{/if}
-							</div>
+					<div class="border-bottom py-3">
+						<h3 class="h6 mb-2">
+							{$pubIdPlugin->getPubIdDisplayType()|escape}
+						</h3>
+						<div class="text-break">
+							{if $resolvingUrl}
+								<a href="{$resolvingUrl|escape}">
+									{$resolvingUrl}
+								</a>
+							{else}
+								{$pubId}
+							{/if}
 						</div>
 					</div>
 				{/if}
@@ -94,28 +90,24 @@
 			{assign var=doiObject value=$issue->getData('doiObject')}
 			{if $doiObject}
 				{assign var="doiUrl" value=$doiObject->getData('resolvingUrl')|escape}
-				<div class="card shadow-sm mb-3">
-					<div class="card-body">
-						<h3 class="h6 mb-2">DOI</h3>
-						<div class="text-break">
-							<a href="{$doiUrl|escape}">
-								{$doiUrl}
-							</a>
-						</div>
+				<div class="border-bottom py-3">
+					<h3 class="h6 mb-2">DOI</h3>
+					<div class="text-break">
+						<a href="{$doiUrl|escape}">
+							{$doiUrl}
+						</a>
 					</div>
 				</div>
 			{/if}
 
 			{* Published date *}
 			{if $includeIssuePublishDate && $issue->getDatePublished()}
-				<div class="card shadow-sm">
-					<div class="card-body">
-						<h3 class="h6 mb-2">
-							<i class="bi bi-calendar3 me-2"></i>{translate key="submissions.published"}
-						</h3>
-						<div>
-							{$issue->getDatePublished()|date_format:$dateFormatShort}
-						</div>
+				<div class="py-3">
+					<h3 class="h6 mb-2">
+						<i class="bi bi-calendar3 me-2"></i>{translate key="submissions.published"}
+					</h3>
+					<div>
+						{$issue->getDatePublished()|date_format:$dateFormatShort}
 					</div>
 				</div>
 			{/if}
@@ -146,20 +138,16 @@
 		{if $section.articles}
 			<div class="section mb-5">
 				{if $section.title}
-					<div class="card shadow-sm mb-3">
-						<div class="card-header bg-light">
-							<{$heading} class="h4 mb-0 text-primary">
-								{$section.title|escape}
-							</{$heading}>
-						</div>
+					<div class="border-bottom mb-3">
+						<{$heading} class="h4 mb-0 text-primary py-2">
+							{$section.title|escape}
+						</{$heading}>
 					</div>
 				{/if}
 				<div class="articles">
 					{foreach from=$section.articles item=article}
-						<div class="card shadow-sm mb-3">
-							<div class="card-body">
-								{include file="frontend/objects/article_summary.tpl" heading=$articleHeading}
-							</div>
+						<div class="article-summary border-bottom py-3">
+							{include file="frontend/objects/article_summary.tpl" heading=$articleHeading}
 						</div>
 					{/foreach}
 				</div>

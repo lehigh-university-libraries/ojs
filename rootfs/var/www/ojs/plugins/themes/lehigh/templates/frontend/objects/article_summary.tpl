@@ -38,7 +38,7 @@
 					<img
 						src="{$publication->getLocalizedCoverImageUrl($article->getData('contextId'))|escape}"
 						alt="{$coverImage.altText|escape|default:''}"
-						class="img-fluid rounded shadow-sm"
+						class="img-fluid rounded"
 					>
 				</a>
 			</div>
@@ -46,7 +46,7 @@
 
 		<div class="{if $publication->getLocalizedData('coverImage')}col-md-9{else}col-12{/if}">
 			<{$heading} class="title mb-2">
-				<a id="article-{$article->getId()}" {if $journal}href="{url journal=$journal->getPath() page="article" op="view" path=$articlePath}"{else}href="{url page="article" op="view" path=$articlePath}"{/if} class="text-decoration-none text-dark">
+				<a id="article-{$article->getId()}" {if $journal}href="{url journal=$journal->getPath() page="article" op="view" path=$articlePath}"{else}href="{url page="article" op="view" path=$articlePath}"{/if} class="text-decoration-none text-dark fw-bold">
 					{if $currentContext}
 						{$publication->getLocalizedTitle(null, 'html')|strip_unsafe_html}
 						{assign var=localizedSubtitle value=$publication->getLocalizedSubtitle(null, 'html')|strip_unsafe_html}
@@ -65,9 +65,9 @@
 			{assign var=submissionPages value=$publication->getData('pages')}
 			{assign var=submissionDatePublished value=$publication->getData('datePublished')}
 			{if $showAuthor || $submissionPages || ($submissionDatePublished && $showDatePublished)}
-			<div class="meta mb-3">
+			<div class="meta pb-2 mb-3">
 				{if $showAuthor}
-				<div class="authors text-muted mb-1">
+				<div class="authors text-muted mb-1 text-uppercase small">
 					<i class="bi bi-person-fill me-1"></i>{$publication->getAuthorString($authorUserGroups)|escape}
 				</div>
 				{/if}

@@ -31,13 +31,21 @@
 		{* Display an issue with the Table of Contents *}
 		{else}
 			{include file="frontend/components/breadcrumbs_issue.tpl" currentTitle=$issueIdentification}
-			<div class="issue-header bg-white shadow-sm rounded p-4 mb-4">
-				<h1 class="display-6 text-primary mb-0">
-					{$issueIdentification|escape}
-				</h1>
-			</div>
-			<div class="issue-toc bg-white shadow-sm rounded p-4">
-				{include file="frontend/objects/issue_toc.tpl"}
+			<div class="bg-white shadow-sm rounded p-4">
+				<div class="row">
+					<div class="col-12">
+						<div class="issue-header mb-4">
+							<h1 class="display-6 text-primary mb-0">
+								{$issueIdentification|escape}
+							</h1>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="issue-toc">
+							{include file="frontend/objects/issue_toc.tpl"}
+						</div>
+					</div>
+				</div>
 			</div>
 		{/if}
 	</div>

@@ -34,7 +34,11 @@ class LehighThemePlugin extends ThemePlugin {
 			'https://www.lehigh.edu/~inltswms/include/ltstemplate/css/styles.min.css',
 			['contexts' => 'frontend', 'baseUrl' => '']
 		);
-
+		$this->addStyle(
+			'default-styles',
+			'styles/default.css',
+			['contexts' => 'frontend']
+		);
 		// Load Bootstrap 5.3.8 JavaScript
 		$this->addScript(
 			'bootstrap-js',
