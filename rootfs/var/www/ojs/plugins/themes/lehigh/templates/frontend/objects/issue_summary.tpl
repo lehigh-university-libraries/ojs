@@ -31,7 +31,6 @@
 
 		{if $issue->getDatePublished()}
 			<div class="text-muted small">
-				<i class="bi bi-calendar3"></i>
 				{$issue->getDatePublished()|date_format:$dateFormatShort}
 			</div>
 		{/if}

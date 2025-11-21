@@ -68,7 +68,7 @@
 			<div class="meta pb-2 mb-3">
 				{if $showAuthor}
 				<div class="authors text-muted mb-1 text-uppercase small">
-					<i class="bi bi-person-fill me-1"></i>{$publication->getAuthorString($authorUserGroups)|escape}
+					{$publication->getAuthorString($authorUserGroups)|escape}
 				</div>
 				{/if}
 
@@ -76,13 +76,13 @@
 					{* Page numbers for this article *}
 					{if $submissionPages}
 						<div class="pages">
-							<i class="bi bi-file-text me-1"></i>{$submissionPages|escape}
+							{$submissionPages|escape}
 						</div>
 					{/if}
 
 					{if $showDatePublished && $submissionDatePublished}
 						<div class="published">
-							<i class="bi bi-calendar3 me-1"></i>{$submissionDatePublished|date_format:$dateFormatShort}
+							{$submissionDatePublished|date_format:$dateFormatShort}
 						</div>
 					{/if}
 				</div>

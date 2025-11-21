@@ -62,7 +62,7 @@
 {/if}
 
 {* Don't be frightened. This is just a link *}
-<a class="btn {if $isSupplementary}btn-outline-secondary{else}btn-primary{/if} btn-sm {$type|escape}{if $restricted} restricted{/if}" href="{url page=$page op="view" path=$path}"{if $id} id="{$id}"{/if}{if $labelledBy} aria-labelledby="{$labelledBy}"{/if}>
+<a class="lehigh-btn lehigh-{if $isSupplementary}btn-outline-secondary{else}btn-primary{/if} btn-sm {$type|escape}{if $restricted} restricted{/if}" href="{url page=$page op="view" path=$path}"{if $id} id="{$id}"{/if}{if $labelledBy} aria-labelledby="{$labelledBy}"{/if}>
 	{* Add some screen reader text to indicate if a galley is restricted *}
 	{if $restricted}
 		<span class="visually-hidden">
@@ -72,14 +72,8 @@
 				{translate key="reader.subscriptionAccess"}
 			{/if}
 		</span>
-		<i class="bi bi-lock-fill me-1"></i>
 	{/if}
 
-	{if $type == "pdf"}
-		<i class="bi bi-file-pdf-fill me-1"></i>
-	{else}
-		<i class="bi bi-file-earmark-text-fill me-1"></i>
-	{/if}
 	{$galley->getGalleyLabel()|escape}
 
 	{if $restricted && $purchaseFee && $purchaseCurrency}

@@ -106,7 +106,7 @@
 
 			{if $publication->getData('authors')}
 				<section class="item authors mb-4">
-					<h2 class="h5 text-primary mb-3"><i class="bi bi-people-fill me-2"></i>{translate key="article.authors"}</h2>
+					<span class="label text-primary mb-3">{translate key="article.authors"}</span>
 					<ul class="list-unstyled authors">
 					{foreach from=$publication->getData('authors') item=author}
 						<li class="mb-3 p-3 bg-light rounded">
@@ -151,15 +151,15 @@
 			{if $doiObject}
 				{assign var="doiUrl" value=$doiObject->getData('resolvingUrl')|escape}
 				<section class="item doi mb-4 p-3 border-start border-primary border-4 bg-light">
-					<h2 class="h6 mb-2">
+					<span class="label mb-2">
 						{capture assign=translatedDOI}{translate key="doi.readerDisplayName"}{/capture}
 						{translate key="semicolon" label=$translatedDOI}
-					</h2>
-					<div class="value">
+					</span>
+					<p class="value">
 						<a href="{$doiUrl}" class="text-break">
 							{$doiUrl}
 						</a>
-					</div>
+					</p>
 				</section>
 			{/if}
 
@@ -167,10 +167,10 @@
 			{* Keywords *}
 			{if !empty($publication->getLocalizedData('keywords'))}
 			<section class="item keywords mb-4">
-				<h2 class="h5 text-primary mb-3">
+				<span class="label text-primary mb-3">
 					{capture assign=translatedKeywords}{translate key="article.subject"}{/capture}
 					{translate key="semicolon" label=$translatedKeywords}
-				</h2>
+				</span>
 				<div class="value">
 					{foreach name="keywords" from=$publication->getLocalizedData('keywords') item="keyword"}
 						<span class="badge bg-primary me-2 mb-2">{$keyword|escape}</span>
@@ -182,7 +182,7 @@
 			{* Abstract *}
 			{if $publication->getLocalizedData('abstract')}
 				<section class="item abstract mb-4 p-4 bg-light rounded">
-					<h2 class="h5 text-primary mb-3">{translate key="article.abstract"}</h2>
+					<span class="label text-primary mb-3">{translate key="article.abstract"}</span>
 					<div class="abstract-content">
 						{$publication->getLocalizedData('abstract')|strip_unsafe_html}
 					</div>
@@ -201,13 +201,13 @@
 			{/foreach}
 			{if $hasBiographies}
 				<section class="item author_bios">
-					<h2 class="label">
+					<span class="label">
 						{if $hasBiographies > 1}
 							{translate key="submission.authorBiographies"}
 						{else}
 							{translate key="submission.authorBiography"}
 						{/if}
-					</h2>
+					</span>
 					<ul class="authors">
 					{foreach from=$publication->getData('authors') item=author}
 						{if $author->getLocalizedData('biography')}
@@ -234,9 +234,9 @@
 			{* References *}
 			{if $parsedCitations || $publication->getData('citationsRaw')}
 				<section class="item references">
-					<h2 class="label">
+					<span class="label">
 						{translate key="submission.citations"}
-					</h2>
+					</span>
 					<div class="value">
 						{if $parsedCitations}
 							{foreach from=$parsedCitations item="parsedCitation"}
@@ -277,9 +277,9 @@
 			{if $primaryGalleys}
 				<div class="card shadow-sm mb-4">
 					<div class="card-header bg-primary text-white">
-						<h2 class="h6 mb-0">
+						<span class="label mb-0">
 							{translate key="submission.downloads"}
-						</h2>
+						</span>
 					</div>
 					<div class="card-body">
 						<ul class="list-unstyled mb-0 galleys_links">
@@ -295,9 +295,9 @@
 			{if $supplementaryGalleys}
 				<div class="card shadow-sm mb-4">
 					<div class="card-header bg-secondary text-white">
-						<h3 class="h6 mb-0">
+						<span class="label mb-0">
 							{translate key="submission.additionalFiles"}
-						</h3>
+						</span>
 					</div>
 					<div class="card-body">
 						<ul class="list-unstyled mb-0 supplementary_galleys_links">
@@ -314,9 +314,9 @@
 			{if $publication->getData('datePublished')}
 			<div class="card shadow-sm mb-4">
 				<div class="card-body">
-					<h2 class="h6 text-primary mb-2">
-						<i class="bi bi-calendar3 me-2"></i>{translate key="submissions.published"}
-					</h2>
+					<span class="label text-primary mb-2">
+						{translate key="submissions.published"}
+					</span>
 					<div class="value">
 						{* If this is the original version *}
 						{if $firstPublication->getId() === $publication->getId()}
@@ -328,9 +328,9 @@
 					</div>
 					{if count($article->getPublishedPublications()) > 1}
 						<hr class="my-3">
-						<h3 class="h6 text-primary mb-2">
+						<span class="label text-primary mb-2">
 							{translate key="submission.versions"}
-						</h3>
+						</span>
 						<ul class="list-unstyled mb-0">
 							{foreach from=array_reverse($article->getPublishedPublications()) item=iPublication}
 								{capture assign="name"}{translate key="submission.versionIdentity" datePublished=$iPublication->getData('datePublished')|date_format:$dateFormatShort version=$iPublication->getData('version')}{/capture}
@@ -353,7 +353,7 @@
 			{* Data Availability Statement *}
 			{if $publication->getLocalizedData('dataAvailability')}
 				<section class="item dataAvailability" id="data-availability-statement">
-					<h2 class="label">{translate key="submission.dataAvailability"}</h2>
+					<span class="label">{translate key="submission.dataAvailability"}</span>
 					{$publication->getLocalizedData('dataAvailability')|strip_unsafe_html}
 				</section>
 			{/if}
@@ -364,9 +364,9 @@
 					<div class="card-body">
 						{if $issue}
 							<div class="mb-3">
-								<h2 class="h6 text-primary mb-2">
-									<i class="bi bi-journal-text me-2"></i>{translate key="issue.issue"}
-								</h2>
+								<span class="label text-primary mb-2">
+									{translate key="issue.issue"}
+								</span>
 								<div class="value">
 									<a class="text-decoration-none" href="{url page="issue" op="view" path=$issue->getBestIssueId()}">
 										{$issue->getIssueIdentification()|escape}
@@ -377,9 +377,9 @@
 
 						{if $section}
 							<div class="mb-3">
-								<h2 class="h6 text-primary mb-2">
+								<span class="label text-primary mb-2">
 									{translate key="section.section"}
-								</h2>
+								</span>
 								<div class="value">
 									<span class="badge bg-secondary">{$section->getLocalizedTitle()|escape}</span>
 								</div>
@@ -388,9 +388,9 @@
 
 						{if $categories}
 							<div>
-								<h2 class="h6 text-primary mb-2">
+								<span class="text-primary mb-2">
 									{translate key="category.category"}
-								</h2>
+								</span>
 								<div class="value">
 									<ul class="list-unstyled mb-0">
 										{foreach from=$categories item=category}
@@ -412,9 +412,9 @@
 				{assign var=pubId value=$publication->getStoredPubId($pubIdPlugin->getPubIdType())}
 				{if $pubId}
 					<section class="item pubid">
-						<h2 class="label">
+						<span class="label">
 							{$pubIdPlugin->getPubIdDisplayType()|escape}
-						</h2>
+						</span>
 						<div class="value">
 							{if $pubIdPlugin->getResolvingURL($currentJournal->getId(), $pubId)|escape}
 								<a id="pub-id::{$pubIdPlugin->getPubIdType()|escape}" href="{$pubIdPlugin->getResolvingURL($currentJournal->getId(), $pubId)|escape}">
@@ -431,9 +431,9 @@
 			{* Licensing info *}
 			{if $currentContext->getLocalizedData('licenseTerms') || $publication->getData('licenseUrl')}
 				<div class="item copyright">
-					<h2 class="label">
+					<span class="label">
 						{translate key="submission.license"}
-					</h2>
+					</span>
 					{if $publication->getData('licenseUrl')}
 						{if $ccLicenseBadge}
 							{if $publication->getLocalizedData('copyrightHolder')}

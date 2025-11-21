@@ -61,16 +61,18 @@
 		{if $issue}
 			<section class="current_issue mb-5">
 				<a id="homepageIssue"></a>
-				<h2 class="h3 mb-3">
-					{translate key="journal.currentIssue"}
-				</h2>
-				<div class="current_issue_title mb-3">
-					<strong>{$issue->getIssueIdentification()|escape}</strong>
-				</div>
-				<div class="mb-3">
-					{include file="frontend/objects/issue_toc.tpl" heading="h3"}
-				</div>
-				<a href="{url router=PKP\core\PKPApplication::ROUTE_PAGE page="issue" op="archive"}" class="btn btn-primary">
+					<div class="col-12 card">
+						<div class="card-header">
+							<h1>
+								{translate key="journal.currentIssue"}: {$issue->getIssueIdentification()|escape}
+						  </h1>
+						</div>
+						<div class="issue-toc card-body">
+							{include file="frontend/objects/issue_toc.tpl"}
+						</div>
+					</div>
+
+				<a href="{url router=PKP\core\PKPApplication::ROUTE_PAGE page="issue" op="archive"}" class="lehigh-btn lehigh-btn-primary mt-3">
 					{translate key="journal.viewAllIssues"}
 				</a>
 			</section>

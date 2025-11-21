@@ -59,7 +59,7 @@
 			{* Description *}
 			{if $issue->hasDescription()}
 				<div class="border-bottom py-3">
-					<h2 class="h5 text-primary mb-3">Description</h2>
+					<span class="label text-primary mb-3">Description</h2>
 					{$issue->getLocalizedDescription()|strip_unsafe_html}
 				</div>
 			{/if}
@@ -70,9 +70,9 @@
 				{if $pubId}
 					{assign var="resolvingUrl" value=$pubIdPlugin->getResolvingURL($currentJournal->getId(), $pubId)|escape}
 					<div class="border-bottom py-3">
-						<h3 class="h6 mb-2">
+						<span class="label mb-2">
 							{$pubIdPlugin->getPubIdDisplayType()|escape}
-						</h3>
+						</span>
 						<div class="text-break">
 							{if $resolvingUrl}
 								<a href="{$resolvingUrl|escape}">
@@ -91,7 +91,7 @@
 			{if $doiObject}
 				{assign var="doiUrl" value=$doiObject->getData('resolvingUrl')|escape}
 				<div class="border-bottom py-3">
-					<h3 class="h6 mb-2">DOI</h3>
+					<span class="label mb-2">DOI</span>
 					<div class="text-break">
 						<a href="{$doiUrl|escape}">
 							{$doiUrl}
@@ -103,12 +103,12 @@
 			{* Published date *}
 			{if $includeIssuePublishDate && $issue->getDatePublished()}
 				<div class="py-3">
-					<h3 class="h6 mb-2">
-						<i class="bi bi-calendar3 me-2"></i>{translate key="submissions.published"}
-					</h3>
-					<div>
+					<span class="label mb-2">
+						{translate key="submissions.published"}
+					</span>
+					<p>
 						{$issue->getDatePublished()|date_format:$dateFormatShort}
-					</div>
+					</p>
 				</div>
 			{/if}
 		</div>
@@ -119,7 +119,7 @@
 		<div class="card shadow-sm mb-4">
 			<div class="card-header bg-primary text-white">
 				<{$heading} id="issueTocGalleyLabel" class="h5 mb-0">
-					<i class="bi bi-download me-2"></i>{translate key="issue.fullIssue"}
+					{translate key="issue.fullIssue"}
 				</{$heading}>
 			</div>
 			<div class="card-body">
