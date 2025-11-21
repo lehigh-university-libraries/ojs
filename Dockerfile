@@ -12,7 +12,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_22/ghostscript
     GHOSTSCRIPT_VERSION=10.05.1-r0 \
     # renovate: datasource=repology depName=alpine_3_22/npm
-    NPM_VERSION=11.3.0-r1 \
+    NPM_VERSION=11.4.2-r0 \
     # renovate: datasource=github-tags depName=ojs packageName=pkp/ojs
     OJS_VERSION=3_5_0-1 \
     # renovate: datasource=repology depName=alpine_3_22/php83
@@ -72,6 +72,8 @@ ENV \
     OJS_X_FORWARDED_FOR=Off \
     OJS_SMTP_SERVER= \
     OJS_SMTP_PORT=25 \
+    RECAPTCHA_PUBLIC_KEY= \
+    RECAPTCHA_PRIVATE_KEY= \
     # see https://github.com/Islandora-Devops/isle-buildkit/tree/main/nginx#nginx-settings
     PHP_MAX_EXECUTION_TIME=300 \
     PHP_MAX_INPUT_TIME=300 \
