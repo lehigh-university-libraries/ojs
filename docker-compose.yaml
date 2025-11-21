@@ -47,6 +47,8 @@ services:
       OJS_SMTP_SERVER: ${OJS_SMTP_SERVER:-}
       OJS_ENABLE_HTTPS: "true"
       OJS_BASE_URL: "https://${DOMAIN:-localhost}"
+      RECAPTCHA_PUBLIC_KEY: ${RECAPTCHA_PUBLIC_KEY:-}
+      RECAPTCHA_PRIVATE_KEY: ${RECAPTCHA_PRIVATE_KEY:-}
     networks:
       - default
     secrets:
