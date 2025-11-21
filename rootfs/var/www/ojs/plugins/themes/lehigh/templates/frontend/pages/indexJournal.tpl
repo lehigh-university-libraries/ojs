@@ -63,7 +63,7 @@
 				<a id="homepageIssue"></a>
 					<div class="col-12 card">
 						<div class="card-header">
-							<h1>
+							<h1 class="mb-0">
 								{translate key="journal.currentIssue"}: {$issue->getIssueIdentification()|escape}
 						  </h1>
 						</div>
