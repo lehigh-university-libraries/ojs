@@ -13,7 +13,7 @@ Dockerized deployment of [Open Journal Systems](https://pkp.sfu.ca/software/ojs/
 ```bash
 git clone https://github.com/lehigh-university-libraries/ojs
 cd ojs
-cp docker-compose.override-sample.yaml docker-compose.override.yaml
+cp docker-compose.override-example.yaml docker-compose.override.yaml
 ```
 
 2. Start the containers:
