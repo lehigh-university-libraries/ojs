@@ -26,7 +26,7 @@ secrets:
 
 services:
   init:
-    image: islandora/base:6.0.2@sha256:9cf768c05333d1c0a8a82d2c70ff608b105477d7d26aeed0600c9804fa8e1e6a
+    image: islandora/base:6.2.1@sha256:1cdf572e4ebbb1e977dfd4f34aa1f2edb31d7722ce7604d05348736dcdebfe51
     restart: no
     volumes:
       - ./secrets:/secrets:rw
