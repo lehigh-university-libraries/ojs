@@ -12,7 +12,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_22/ghostscript
     GHOSTSCRIPT_VERSION=10.05.1-r0 \
     # renovate: datasource=repology depName=alpine_3_22/npm
-    NPM_VERSION=11.4.2-r0 \
+    NPM_VERSION=11.6.4-r0 \
     # renovate: datasource=github-tags depName=ojs packageName=pkp/ojs
     OJS_VERSION=3_5_0-1 \
     # renovate: datasource=repology depName=alpine_3_22/php83
@@ -82,7 +82,8 @@ ENV \
     PHP_MEMORY_LIMIT=256M \
     NGINX_FASTCGI_READ_TIMEOUT=300s \
     NGINX_FASTCGI_SEND_TIMEOUT=300s \
-    NGINX_FASTCGI_CONNECT_TIMEOUT=300s
+    NGINX_FASTCGI_CONNECT_TIMEOUT=300s \
+    NGINX_REAL_IP_RECURSIVE=on
 
 COPY --link rootfs /
 

@@ -38,8 +38,6 @@ services:
     image: ghcr.io/lehigh-university-libraries/ojs:main
     build: .
     restart: on-failure:3
-    ports:
-      - 8888:80
     environment:
       OJS_OAI_REPOSITORY_ID: ${DOMAIN:-localhost}
       OJS_ENABLE_BEACON: 1
@@ -47,8 +45,6 @@ services:
       OJS_SMTP_SERVER: ${OJS_SMTP_SERVER:-}
       OJS_ENABLE_HTTPS: "true"
       OJS_BASE_URL: "https://${DOMAIN:-localhost}"
-      RECAPTCHA_PUBLIC_KEY: ${RECAPTCHA_PUBLIC_KEY:-}
-      RECAPTCHA_PRIVATE_KEY: ${RECAPTCHA_PRIVATE_KEY:-}
     networks:
       - default
     secrets:
@@ -62,3 +58,35 @@ services:
       - ojs-cache:/var/www/ojs/cache:rw
       - ojs-files:/var/www/files:rw
       - ojs-public:/var/www/ojs/public:rw
+  traefik:
+    image: traefik:v3.6.2@sha256:aaf0f6185419a50c74651448c1a5bf4606bd2d2ddb7b8749eed505d55bf8b8ea
+    restart: always
+    command: >-
+      --api.insecure=true
+      --api.dashboard=true
+      --api.debug=true
+      --ping=true
+      --entryPoints.http.address=:80
+      --entryPoints.http.forwardedHeaders.trustedIPs=172.0.0.0/8
+      --entryPoints.http.transport.respondingTimeouts.readTimeout=3600
+      --providers.file.filename=/etc/traefik/config.yaml
+      --providers.file.watch=true
+      --providers.docker=true
+      --providers.docker.network=default
+      --providers.docker.exposedByDefault=false
+      --experimental.localPlugins.captcha-protect.moduleName=github.com/libops/captcha-protect
+    environment:
+      TURNSTILE_PUBLIC_KEY: ${TURNSTILE_PUBLIC_KEY:-}
+      TURNSTILE_PRIVATE_KEY: ${TURNSTILE_PRIVATE_KEY:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - 8888:80
+    volumes:
+      - ./conf/traefik/plugins/captcha-protect:/plugins-local/src/github.com/libops/captcha-protect:r
+      - ./conf/traefik/config.tmpl:/etc/traefik/config.yaml:ro
+      - ./conf/traefik/challenge.tmpl.html:/challenge.tmpl.html:ro
+      - /var/run/docker.sock:/var/run/docker.sock:z
+      - ./tmp/traefik:/tmp:rw
+    healthcheck:
+      test: traefik healthcheck --ping
+      start_period: 5s

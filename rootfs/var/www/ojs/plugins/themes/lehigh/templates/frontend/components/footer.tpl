@@ -107,6 +107,7 @@
             </div>
         </div>
     </div>
+    {load_script context="frontend" scripts=$scripts}
 </footer>
 </body>
 </html>

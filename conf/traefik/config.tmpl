@@ -1,0 +1,56 @@
+http:
+  routers:
+    ojs:
+      rule: PathPrefix(`/`)
+      middlewares:
+        - captcha-protect
+      entryPoints:
+        - http
+      service: ojs
+  services:
+    ojs:
+      loadBalancer:
+        servers:
+          - url: http://ojs:80
+  middlewares:
+    captcha-protect:
+      plugin:
+        captcha-protect:
+          rateLimit: 0
+          ipv4subnetMask: 8
+          # 10d
+          window: 864000
+          protectRoutes: /
+          protectParameters: "true"
+          exemptIps:
+            # Lehigh range
+            - 128.180.0.0/16
+            # Lehigh Guest Network
+            - 4.59.138.56/29
+            - 162.223.16.248/29
+          goodBots:
+            - apple.com
+            - archive.org
+            - commoncrawl.org
+            - duckduckgo.com
+            - iframely.com
+            - facebook.com
+            - instagram.com
+            - kagibot.org
+            - linkedin.com
+            - msn.com
+            - openalex.org
+            - twitter.com
+            - x.com
+          challengeTmpl: /challenge.tmpl.html
+          challengeURL: ""
+          challengeStatusCode: 403
+          captchaProvider: turnstile
+          siteKey: {{ env "TURNSTILE_PUBLIC_KEY" }}
+          secretKey: {{ env "TURNSTILE_PRIVATE_KEY" }}
+          persistentStateFile: /tmp/state.json
+          protectFileExtensions: pdf
+          enableGooglebotIPCheck: "true"
+          periodSeconds: 30
+          failureThreshold: 3
+          ipForwardedHeader: "X-Forwarded-For"
