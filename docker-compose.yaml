@@ -26,7 +26,7 @@ secrets:
 
 services:
   init:
-    image: islandora/base:6.0.2@sha256:9cf768c05333d1c0a8a82d2c70ff608b105477d7d26aeed0600c9804fa8e1e6a
+    image: islandora/base:6.3.0@sha256:d07089a13276e4f9b83bcca8729e858b049dce674fff1bff5dcaeb1e532e76fa
     restart: no
     volumes:
       - ./secrets:/secrets:rw
@@ -59,7 +59,7 @@ services:
       - ojs-files:/var/www/files:rw
       - ojs-public:/var/www/ojs/public:rw
   traefik:
-    image: traefik:v3.6.2@sha256:aaf0f6185419a50c74651448c1a5bf4606bd2d2ddb7b8749eed505d55bf8b8ea
+    image: traefik:v3.6.7@sha256:ebe7d3fc715e28f033cea8265e9105b9d64705867f5b916e2d9ed0b62c530192
     restart: always
     command: >-
       --api.insecure=true
