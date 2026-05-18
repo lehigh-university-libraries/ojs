@@ -14,9 +14,9 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_22/npm
     NPM_VERSION=11.6.4-r0 \
     # renovate: datasource=github-tags depName=ojs packageName=pkp/ojs
-    OJS_VERSION=3_5_0-1 \
+    OJS_VERSION=3_5_0-4 \
     # renovate: datasource=repology depName=alpine_3_22/php83
-    PHP_VERSION=8.3.27-r0 \
+    PHP_VERSION=8.3.29-r0 \
     # renovate: datasource=repology depName=alpine_3_22/poppler-utils
     POPPLER_VERSION=25.04.0-r0
 
@@ -70,7 +70,7 @@ ENV \
     OJS_ENABLE_BEACON=1 \
     OJS_SESSION_LIFETIME=30 \
     OJS_X_FORWARDED_FOR=Off \
-    OJS_SMTP_SERVER= \
+    OJS_SMTP_SERVER=host.docker.internal \
     OJS_SMTP_PORT=25 \
     RECAPTCHA_PUBLIC_KEY= \
     RECAPTCHA_PRIVATE_KEY= \

@@ -38,11 +38,14 @@ services:
     image: ghcr.io/lehigh-university-libraries/ojs:main
     build: .
     restart: on-failure:3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       OJS_OAI_REPOSITORY_ID: ${DOMAIN:-localhost}
       OJS_ENABLE_BEACON: 1
       DB_HOST: ${DB_HOST:-mariadb}
-      OJS_SMTP_SERVER: ${OJS_SMTP_SERVER:-}
+      OJS_SMTP_SERVER: ${OJS_SMTP_SERVER:-host.docker.internal}
+      OJS_SMTP_PORT: ${OJS_SMTP_PORT:-25}
       OJS_ENABLE_HTTPS: "true"
       OJS_BASE_URL: "https://${DOMAIN:-localhost}"
     networks:
