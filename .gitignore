@@ -2,3 +2,5 @@
 secrets
 !secrets/.keep
 docker-compose.override.yaml
+tmp/traefik
+!tmp/traefik/.keep
