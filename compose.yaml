@@ -1,0 +1,143 @@
+---
+x-common: &common
+  restart: unless-stopped
+  networks:
+    default:
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
+          gateway: 172.23.0.1
+
+volumes:
+  mariadb-data: {}
+  ojs-cache: {}
+  ojs-files: {}
+  ojs-public: {}
+
+secrets:
+  DB_ROOT_PASSWORD:
+    file: ./secrets/DB_ROOT_PASSWORD
+  OJS_DB_PASSWORD:
+    file: ./secrets/OJS_DB_PASSWORD
+  OJS_API_KEY_SECRET:
+    file: ./secrets/OJS_API_KEY_SECRET
+  OJS_SALT:
+    file: ./secrets/OJS_SALT
+  OJS_ADMIN_PASSWORD:
+    file: ./secrets/OJS_ADMIN_PASSWORD
+  OJS_SECRET_KEY:
+    file: ./secrets/OJS_SECRET_KEY
+
+services:
+  init:
+    image: libops/base:3.2.2.0@sha256:aa0c61029734f3293bca068a95c72c0b07ac949292c446c83ada78e81a42c85d
+    restart: "no"
+    working_dir: /work
+    environment:
+      COMPOSE_FILE: /work/compose.yaml
+      SECRETS_ROOT: /work/secrets
+      SECRET_FORMAT_OJS_SECRET_KEY: laravel-base64
+    volumes:
+      - ./secrets:/work/secrets:rw
+      - ./compose.yaml:/work/compose.yaml:ro
+      - ./scripts/validate-ojs-secret-key.sh:/usr/local/bin/validate-ojs-secret-key.sh:ro
+    entrypoint: generate-compose-secrets.sh
+    profiles: [none]
+
+  traefik:
+    <<: *common
+    image: traefik:v3.6.2@sha256:aaf0f6185419a50c74651448c1a5bf4606bd2d2ddb7b8749eed505d55bf8b8ea
+    command:
+      - --ping=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.forwardedHeaders.trustedIPs=172.0.0.0/8
+      - --entrypoints.web.transport.respondingTimeouts.readTimeout=3600s
+      - --providers.file.filename=/etc/traefik/config.yaml
+      - --providers.file.watch=true
+      - --experimental.localPlugins.captcha-protect.moduleName=github.com/libops/captcha-protect
+    environment:
+      TURNSTILE_PUBLIC_KEY: ${TURNSTILE_PUBLIC_KEY:-}
+      TURNSTILE_PRIVATE_KEY: ${TURNSTILE_PRIVATE_KEY:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - 8888:80
+    volumes:
+      - ./conf/traefik/plugins/captcha-protect:/plugins-local/src/github.com/libops/captcha-protect:ro
+      - ./conf/traefik/config.tmpl:/etc/traefik/config.yaml:ro
+      - ./conf/traefik/challenge.tmpl.html:/challenge.tmpl.html:ro
+      - ./tmp/traefik:/tmp:rw
+    depends_on:
+      ojs:
+        condition: service_healthy
+    healthcheck:
+      test: traefik healthcheck --ping
+      start_period: 10s
+
+  ojs:
+    <<: *common
+    image: ghcr.io/lehigh-university-libraries/ojs:main
+    build: .
+    environment:
+      OJS_OAI_REPOSITORY_ID: ${DOMAIN:-localhost}
+      OJS_ENABLE_BEACON: 1
+      OJS_SMTP_SERVER: ${OJS_SMTP_SERVER:-}
+      OJS_SMTP_PORT: "${OJS_SMTP_PORT:-25}"
+      OJS_DEFAULT_ENVELOPE_SENDER: ${OJS_DEFAULT_ENVELOPE_SENDER:-noreply@journals.lehigh.edu}
+      INGRESS_HOSTNAMES: ${DOMAIN:-localhost}
+      INGRESS_SCHEME: https
+      DB_HOST: ${DB_HOST:-mariadb}
+    secrets:
+      - source: OJS_API_KEY_SECRET
+      - source: OJS_SECRET_KEY
+      - source: OJS_DB_PASSWORD
+        target: DB_PASSWORD
+      - source: OJS_SALT
+      - source: OJS_ADMIN_PASSWORD
+    volumes:
+      - ojs-cache:/var/www/ojs/cache:rw
+      - ojs-files:/var/www/files:rw
+      - ojs-public:/var/www/ojs/public:rw
+    depends_on:
+      database-init:
+        condition: service_completed_successfully
+      mariadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /installed && grep -q '^installed = On' /var/www/ojs/config.inc.php && wget -q --spider http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 10m
+
+  database-init:
+    image: libops/base:3.2.2.0@sha256:aa0c61029734f3293bca068a95c72c0b07ac949292c446c83ada78e81a42c85d
+    restart: "no"
+    networks:
+      default:
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: "3306"
+      DB_NAME: ojs
+      DB_USER: ojs
+      DB_CHARACTER_SET: utf8
+      DB_COLLATION: utf8_general_ci
+    secrets:
+      - source: DB_ROOT_PASSWORD
+      - source: OJS_DB_PASSWORD
+        target: DB_PASSWORD
+    entrypoint: /usr/local/bin/init-database.sh
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  mariadb:
+    <<: *common
+    image: libops/mariadb:11@sha256:7e0eb90c7cba204b62e8bed72fba00193cbc2e50072fc6e40a6fab8de4b0b857
+    volumes:
+      - mariadb-data:/var/lib/mysql:rw
+    secrets:
+      - source: DB_ROOT_PASSWORD

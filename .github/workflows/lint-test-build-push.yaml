@@ -1,9 +1,15 @@
 name: lint-test
+
 on:
-  push:
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: lint-test-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint-test:
@@ -14,12 +20,7 @@ jobs:
       - uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
 
       - run: make lint
-      - run: cp docker-compose.override-example.yaml docker-compose.override.yaml
+      - run: cp compose.override-example.yaml compose.override.yaml
       - run: make test
-
-  build-push:
-    uses: lehigh-university-libraries/gha/.github/workflows/build-push-ghcr.yaml@main
-    permissions:
-      contents: read
-      packages: write
-    secrets: inherit
+      - if: failure()
+        run: docker compose logs

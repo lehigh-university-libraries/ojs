@@ -1,0 +1,15 @@
+---
+services:
+  ojs:
+    environment:
+      INGRESS_SCHEME: http
+      OJS_SMTP_SERVER: mailpit
+      OJS_SMTP_PORT: "1025"
+  mariadb:
+    ports:
+      - "3306:3306"
+  mailpit:
+    image: axllent/mailpit:v1.30@sha256:b868afa176bfd6cce2323ea316cd99ccad77915e51e595748f6d786700ecf109
+    ports:
+      - "1025:1025"
+      - "8025:8025"
