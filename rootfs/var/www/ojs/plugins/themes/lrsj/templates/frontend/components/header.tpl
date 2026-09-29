@@ -82,6 +82,7 @@
                         </div>
                       </div>
                     </li>
+                    <li><a href="{url page="open-positions"}">Open Positions</a></li>
                     <li class="lehigh-dropdown">
                       <a class="lehigh-dropdown-toggle" href="#" id="aboutDropDown" role="button"
                         aria-expanded="false">About
@@ -93,7 +94,6 @@
                           <ul>
                             <li><a href="{url page="about"}">About the Journal</a></li>
                             <li><a href="{url page="about" op="editorialMasthead"}">Editorial Team</a></li>
-                            <li><a href="{url page="open-positions"}">Open Positions</a></li>
                             <li><a href="{url page="about" op="contact"}">Contact</a></li>
                           </ul>
                         </div>
