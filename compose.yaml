@@ -33,7 +33,7 @@ secrets:
 
 services:
   init:
-    image: ghcr.io/lehigh-university-libraries/base:main@sha256:d62d262c7a62f5f6cea4869cd00747cc36d784e5808187b086450304c3c6c497
+    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:dcda155385ed3811e6192f6b663b978154c9621bb8edc6c863512d9b6de13182
     restart: "no"
     working_dir: /work
     environment:
