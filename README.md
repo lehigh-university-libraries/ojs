@@ -24,6 +24,8 @@ make up
 
 3. Access OJS at http://localhost:8888
 
+The development override supplies Cloudflare's public Turnstile test keys. Production must use real `TURNSTILE_PUBLIC_KEY` and `TURNSTILE_PRIVATE_KEY` values in `.env`.
+
 The installation will run automatically on first startup. The default admin credentials are:
 - Username: `admin` (configurable via `OJS_ADMIN_USERNAME` on the OJS service)
 - Password: Contents of `./secrets/OJS_ADMIN_PASSWORD`

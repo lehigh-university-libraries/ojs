@@ -3,6 +3,12 @@ volumes:
   mariadb-data: {}
 
 services:
+  traefik:
+    environment:
+      # Public test keys, never use this override in production.
+      # https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+      TURNSTILE_PUBLIC_KEY: 1x00000000000000000000AA
+      TURNSTILE_PRIVATE_KEY: 1x0000000000000000000000000000000AA
   ojs:
     environment:
       INGRESS_SCHEME: http
