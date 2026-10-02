@@ -33,7 +33,7 @@ secrets:
 
 services:
   init:
-    image: libops/base:3.2.2.0@sha256:aa0c61029734f3293bca068a95c72c0b07ac949292c446c83ada78e81a42c85d
+    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:dcda155385ed3811e6192f6b663b978154c9621bb8edc6c863512d9b6de13182
     restart: "no"
     working_dir: /work
     environment:
@@ -49,7 +49,7 @@ services:
 
   traefik:
     <<: *common
-    image: traefik:v3.6.2@sha256:aaf0f6185419a50c74651448c1a5bf4606bd2d2ddb7b8749eed505d55bf8b8ea
+    image: traefik:v3.7.13@sha256:24841fe2de7304c149343d877d2923b4c8800a38ba015dea9174c23b20e344a0
     command:
       - --ping=true
       - --entrypoints.web.address=:80

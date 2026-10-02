@@ -86,7 +86,7 @@ Nginx, PHP-FPM, and the s6 process supervision all ship inside the published OJS
 
 ## Secrets Management
 
-Secrets are stored in the `./secrets/` directory and mounted into containers at runtime. `make init` (or `make up`) runs the `init` service, which uses `generate-compose-secrets.sh` (from the `libops/base` image) to create a secure random value for each secret declared in `compose.yaml`, in the format each secret needs (`OJS_SECRET_KEY` gets the `base64:`-prefixed 32-byte format OJS requires). It then validates `OJS_SECRET_KEY` with `scripts/validate-ojs-secret-key.sh`.
+Secrets are stored in the `./secrets/` directory and mounted into containers at runtime. `make init` (or `make up`) runs the `init` service, which uses `generate-compose-secrets.sh` (from the `ghcr.io/lehigh-university-libraries/base` image) to create a secure random value for each secret declared in `compose.yaml`, in the format each secret needs (`OJS_SECRET_KEY` gets the `base64:`-prefixed 32-byte format OJS requires). It then validates `OJS_SECRET_KEY` with `scripts/validate-ojs-secret-key.sh`.
 
 ## Customization
 
