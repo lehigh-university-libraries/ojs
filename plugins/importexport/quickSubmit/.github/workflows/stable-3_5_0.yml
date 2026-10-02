@@ -21,7 +21,7 @@ jobs:
             database: pgsql
     name: quickSubmit
     steps:
-      - uses: pkp/pkp-github-actions@v1
+      - uses: pkp/pkp-github-actions@b0b086d906c167700ba929669b61d7941b2a82c6 # v1
         with:
           node_version: 20
           branch: 'stable-3_5_0'
