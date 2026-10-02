@@ -23,7 +23,7 @@ clean: ## Tear down containers and volumes
 
 lint: ## Lint template files
 	@docker compose config --format json | jq -e '[.services[] | has("build")] | any | not'
-	@docker compose config --format json | jq -e '.services.ojs.image == "ghcr.io/lehigh-university-libraries/ojs:php83"'
+	@docker compose config --format json | jq -e '.services.ojs.image | split("@")[0] == "ghcr.io/lehigh-university-libraries/ojs:php83"'
 	@if command -v json5 > /dev/null 2>&1; then \
 		echo "Running json5 validation on renovate.json5"; \
 		json5 --validate renovate.json5 > /dev/null; \
