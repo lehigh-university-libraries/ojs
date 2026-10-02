@@ -28,9 +28,11 @@ jobs:
         run: cp tests/compose.external-mysql.yaml compose.override.yaml
       - run: make deps
       - run: make test
+      - run: ./scripts/test-admin-login.sh
       - name: Verify existing database after container recreation
         run: |
           docker compose up -d --force-recreate --wait --wait-timeout 1200 ojs
           ./scripts/test.sh
+          ./scripts/test-admin-login.sh
       - if: failure()
         run: docker compose logs

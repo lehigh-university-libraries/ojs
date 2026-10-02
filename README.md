@@ -31,6 +31,10 @@ The installation will run automatically on first startup. The default admin cred
 - Password: Contents of `./secrets/OJS_ADMIN_PASSWORD`
 - Email: `admin@localhost` (configurable via `OJS_ADMIN_EMAIL`)
 
+New admin passwords are 32 hexadecimal characters to fit OJS's login form.
+The secret is used only when creating the initial account; changing the file
+later does not change the password stored in an existing database.
+
 ## Configuration
 
 ### OJS Configuration
@@ -78,7 +82,7 @@ A mounted startup wrapper (`scripts/ojs-setup.sh`) uses PHP `mysqli` for readine
 COMPOSE_FILE=compose.yaml make deps up
 ```
 
-The PR renames `docker-compose.yaml` to `compose.yaml` and moves plugin sources from `rootfs/var/www/ojs/plugins/` to `plugins/`. Update any deployment overrides that reference the old paths, and keep the existing Compose project name so named data volumes are reused. Existing databases may need the normal OJS upgrade procedure when the published application version changes; startup does not perform schema upgrades.
+The PR renames `docker-compose.yaml` to `compose.yaml` and moves plugin sources from `rootfs/var/www/ojs/plugins/` to `plugins/`. Update any deployment overrides that reference the old paths, and keep the existing Compose project name so named data volumes are reused. When the application version changes, follow the [application upgrade rollout](#application-upgrade-rollout) below. Startup does not perform schema upgrades.
 
 ### Nginx and PHP Settings
 
@@ -121,16 +125,51 @@ The following volumes are created for data persistence:
 - `ojs-files` - Uploaded files (submissions, etc.)
 - `ojs-public` - Public files
 
-## Updating OJS Version
+## Application upgrade rollout
 
-OJS core and PHP are maintained in [Lehigh buildkit](https://github.com/lehigh-university-libraries/buildkit/tree/main/images/ojs). Pull the published PHP 8.3 image and recreate OJS:
+OJS core and PHP are maintained in [Lehigh buildkit](https://github.com/lehigh-university-libraries/buildkit/tree/main/images/ojs). **The image installs an empty database but does not upgrade an existing schema.** Pulling/recreating containers, `make up`, and the systemd unit do not run `tools/upgrade.php upgrade`. The systemd unit's `rollout.lock` is only a marker; it does not put the site into maintenance mode.
 
-```bash
-docker compose pull ojs
-docker compose up -d ojs
-```
+Use the production Compose configuration and existing project name throughout. Keep the external MySQL connection, secrets, and named volumes; do not enable the local development override or run `make clean` during a rollout.
 
-Back up the database and the `ojs-files`/`ojs-public` volumes before an application upgrade.
+1. Confirm the supported upgrade path for the current and target OJS releases and compatibility of the mounted plugins/themes. Record the current Git revision and image digest. Update the OJS image reference in `compose.yaml` to the reviewed target digest: `docker compose pull` alone cannot advance a digest-pinned image.
+
+2. Put the public ingress into maintenance mode, pause any external jobs that write to OJS, and stop the web containers:
+
+   ```bash
+   docker compose stop traefik ojs
+   ```
+
+   Take a consistent, restorable backup of the **external MySQL database**, `ojs-files`, `ojs-public`, deployment configuration, and secrets before starting the new version. Preserve these together for rollback.
+
+3. Pull and start only OJS, leaving public traffic blocked:
+
+   ```bash
+   docker compose pull ojs
+   docker compose up -d --no-deps ojs
+   docker compose logs -f ojs
+   ```
+
+   Wait for startup/setup to finish, then leave log-following with Ctrl-C. An HTTP health check can fail while the new code still sees an old schema; do not reopen traffic based on container startup alone.
+
+4. Run the database upgrade explicitly, once, using the configured application database account:
+
+   ```bash
+   docker compose exec -T --user nginx ojs php tools/upgrade.php upgrade
+   docker compose exec -T --user nginx ojs php tools/upgrade.php check
+   ```
+
+   Proceed only after the upgrade succeeds and the check shows matching code and database versions. The database account must have the permissions required by the release's migrations; OJS does not need the MySQL root password mounted into its container. If the upgrade fails, keep the site offline and inspect the error before retrying.
+
+5. Wait for OJS health, then restore Traefik while the public ingress remains in maintenance mode:
+
+   ```bash
+   docker compose up -d --no-deps --wait --wait-timeout 1200 ojs
+   docker compose up -d --wait traefik
+   ```
+
+   Verify journal pages, admin login, submission/file access, and custom themes/plugins through maintenance access. Check the logs, then reopen public traffic and resume external jobs.
+
+**Rollback:** keep traffic blocked, stop OJS, restore the matching database and file backups, and restore the previous Git revision/image digest and configuration before restarting. Reverting the image alone does not undo database migrations. Preserve the original application secrets; regenerating them can invalidate encrypted data.
 
 ## Troubleshooting
 

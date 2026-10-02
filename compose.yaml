@@ -44,7 +44,17 @@ services:
       - ./secrets:/work/secrets:rw
       - ./compose.yaml:/work/compose.yaml:ro
       - ./scripts/validate-ojs-secret-key.sh:/usr/local/bin/validate-ojs-secret-key.sh:ro
-    entrypoint: generate-compose-secrets.sh
+    entrypoint:
+      - /bin/bash
+      - -euc
+      - |
+        umask 077
+        mkdir -p "$$SECRETS_ROOT"
+        # OJS login forms accept at most 32 characters.
+        if [ ! -s "$$SECRETS_ROOT/OJS_ADMIN_PASSWORD" ]; then
+          openssl rand -hex 16 > "$$SECRETS_ROOT/OJS_ADMIN_PASSWORD"
+        fi
+        exec generate-compose-secrets.sh
     profiles: [none]
 
   traefik:
