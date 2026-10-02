@@ -2,24 +2,30 @@
 
 set -eou pipefail
 
-max_attempts=10
-attempt=0
+target_url="${SITE_URL:-http://localhost:8888/}"
 
-while [ $attempt -lt $max_attempts ]; do
-  attempt=$(( attempt + 1 ))
-  echo "Attempt $attempt of $max_attempts..."
-  
-  sleep 10
-  
-  if curl -sf http://localhost:8888/ | grep "<img" | grep -q "Open Journal Systems"; then
-    echo "OJS is up!"
-    exit 0
-  fi
-  sleep 60
-  docker compose logs ojs --tail 20
-done
+docker compose exec -T ojs /command/with-contenv php -r '
+  if (PHP_MAJOR_VERSION !== 8 || PHP_MINOR_VERSION !== 3) {
+    throw new RuntimeException("Expected PHP 8.3");
+  }
+  $config = parse_ini_file("config.inc.php", true);
+  foreach (["host", "port", "name", "username"] as $key) {
+    $env = "DB_" . ($key === "username" ? "USER" : strtoupper($key));
+    if ((string) $config["database"][$key] !== getenv($env)) {
+      throw new RuntimeException("Database configuration mismatch: " . $key);
+    }
+  }
+  foreach (["themes/default", "themes/lehigh", "themes/lrsj", "themes/healthSciences", "importexport/quickSubmit"] as $plugin) {
+    if (!is_readable("plugins/" . $plugin . "/version.xml")) {
+      throw new RuntimeException("Missing plugin: " . $plugin);
+    }
+  }
+'
 
-docker compose logs ojs
+if ! curl -fsS "${target_url}" | grep "<img" | grep -q "Open Journal Systems"; then
+  docker compose logs
+  echo "Failed to detect OJS at ${target_url}"
+  exit 1
+fi
 
-echo "Failed to detect OJS after $max_attempts attempts"
-exit 1
+echo "OJS is up!"

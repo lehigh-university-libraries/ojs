@@ -1,0 +1,55 @@
+---
+volumes:
+  mariadb-data: {}
+
+services:
+  traefik:
+    environment:
+      # Public test keys, never use this override in production.
+      # https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+      TURNSTILE_PUBLIC_KEY: 1x00000000000000000000AA
+      TURNSTILE_PRIVATE_KEY: 1x0000000000000000000000000000000AA
+  ojs:
+    environment:
+      INGRESS_SCHEME: http
+      OJS_SMTP_SERVER: mailpit
+      OJS_SMTP_PORT: "1025"
+    depends_on:
+      database-init:
+        condition: service_completed_successfully
+      mariadb:
+        condition: service_healthy
+  mailpit:
+    image: axllent/mailpit:v1.30@sha256:b868afa176bfd6cce2323ea316cd99ccad77915e51e595748f6d786700ecf109
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  database-init:
+    image: libops/base:3.2.2.0@sha256:aa0c61029734f3293bca068a95c72c0b07ac949292c446c83ada78e81a42c85d
+    restart: "no"
+    networks:
+      default:
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: "3306"
+      DB_NAME: ${DB_NAME:-ojs}
+      DB_USER: ${DB_USER:-ojs}
+      DB_CHARACTER_SET: utf8
+      DB_COLLATION: utf8_general_ci
+    secrets:
+      - source: DB_ROOT_PASSWORD
+      - source: OJS_DB_PASSWORD
+        target: DB_PASSWORD
+    entrypoint: /usr/local/bin/init-database.sh
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  mariadb:
+    restart: unless-stopped
+    image: libops/mariadb:11@sha256:7e0eb90c7cba204b62e8bed72fba00193cbc2e50072fc6e40a6fab8de4b0b857
+    volumes:
+      - mariadb-data:/var/lib/mysql:rw
+    secrets:
+      - source: DB_ROOT_PASSWORD

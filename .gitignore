@@ -1,6 +1,6 @@
 .env
 secrets
 !secrets/.keep
-docker-compose.override.yaml
+compose.override.yaml
 tmp/traefik
 !tmp/traefik/.keep

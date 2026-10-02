@@ -1,25 +1,36 @@
 name: lint-test
+
 on:
-  push:
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: lint-test-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint-test:
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        database: [local, external-mysql]
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 
-      - uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
-
       - run: make lint
-      - run: cp docker-compose.override-example.yaml docker-compose.override.yaml
+      - if: matrix.database == 'local'
+        run: cp compose.override-example.yaml compose.override.yaml
+      - if: matrix.database == 'external-mysql'
+        run: cp tests/compose.external-mysql.yaml compose.override.yaml
+      - run: make deps
       - run: make test
-
-  build-push:
-    uses: lehigh-university-libraries/gha/.github/workflows/build-push-ghcr.yaml@main
-    permissions:
-      contents: read
-      packages: write
-    secrets: inherit
+      - name: Verify existing database after container recreation
+        run: |
+          docker compose up -d --force-recreate --wait --wait-timeout 1200 ojs
+          ./scripts/test.sh
+      - if: failure()
+        run: docker compose logs
