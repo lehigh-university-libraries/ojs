@@ -102,6 +102,8 @@ services:
       - ojs-cache:/var/www/ojs/cache:rw
       - ojs-files:/var/www/files:rw
       - ojs-public:/var/www/ojs/public:rw
+      - ./scripts/ojs-setup.sh:/usr/local/bin/ojs-setup.sh:ro
+      - ./scripts/ojs-setup-up:/etc/s6-overlay/s6-rc.d/ojs-setup/up:ro
       - ./plugins/importexport/quickSubmit:/var/www/ojs/plugins/importexport/quickSubmit:ro
       - ./plugins/themes/healthSciences:/var/www/ojs/plugins/themes/healthSciences:ro
       - ./plugins/themes/lehigh:/var/www/ojs/plugins/themes/lehigh:ro

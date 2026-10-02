@@ -72,6 +72,8 @@ DB_USER=ojs
 
 Provision the database and application user on the external server, and put its password in `secrets/OJS_DB_PASSWORD`. Preserve the existing OJS secrets and uploaded-file volumes. `make init` preserves nonempty secrets; the root password declaration is only used by the local development database and is never mounted into OJS. The image checks the configured database, recognizes an existing installation, and installs OJS only when its tables are absent. It connects using the application account and does not require MySQL root credentials.
 
+A mounted startup wrapper (`scripts/ojs-setup.sh`) uses PHP `mysqli` for readiness and installation detection, matching OJS itself. This supports MySQL 8 authentication even though the image's MariaDB CLI lacks the `caching_sha2_password` plugin. The image still handles installation, config rendering, and permissions. Remove the wrapper once the published image provides equivalent checks.
+
 ```bash
 COMPOSE_FILE=compose.yaml make deps up
 ```
