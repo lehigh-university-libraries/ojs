@@ -33,7 +33,7 @@ secrets:
 
 services:
   init:
-    image: libops/base:3.2.2.0@sha256:dcbc45a6f61b41d6e849c8920ebca58f26cd65414b3efafbaabc5d04fa95af9d
+    image: ghcr.io/lehigh-university-libraries/base:main@sha256:d62d262c7a62f5f6cea4869cd00747cc36d784e5808187b086450304c3c6c497
     restart: "no"
     working_dir: /work
     environment:
