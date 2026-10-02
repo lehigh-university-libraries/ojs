@@ -1,8 +1,6 @@
-.PHONY: help init up clean lint test build deps
+.PHONY: help init up clean lint test deps
 
 SHELL := /bin/bash
-
-DOCKER_IMAGE=ghcr.io/lehigh-university-libraries/ojs:main
 
 help: ## Show this help message
 	echo 'Usage: make [target]'
@@ -12,9 +10,6 @@ help: ## Show this help message
 
 deps: ## Pull image dependencies
 	docker compose pull
-
-build: deps ## Build the ojs image
-	docker compose build
 
 init: ## Generate or repair local secrets
 	docker compose run --rm init
@@ -27,13 +22,8 @@ clean: ## Tear down containers and volumes
 	docker compose down --remove-orphans --volumes
 
 lint: ## Lint template files
-	@docker compose config --format json| jq -e .services.ojs.image | grep lehigh
-	@if command -v hadolint > /dev/null 2>&1; then \
-		echo "Running hadolint on Dockerfiles..."; \
-		find . -name "Dockerfile" | xargs hadolint; \
-	else \
-		echo "hadolint not found, skipping Dockerfile validation"; \
-	fi
+	@docker compose config --format json | jq -e '[.services[] | has("build")] | any | not'
+	@docker compose config --format json | jq -e '.services.ojs.image == "ghcr.io/lehigh-university-libraries/ojs:php83"'
 	@if command -v json5 > /dev/null 2>&1; then \
 		echo "Running json5 validation on renovate.json5"; \
 		json5 --validate renovate.json5 > /dev/null; \

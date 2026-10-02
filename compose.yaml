@@ -13,7 +13,6 @@ networks:
           gateway: 172.23.0.1
 
 volumes:
-  mariadb-data: {}
   ojs-cache: {}
   ojs-files: {}
   ojs-public: {}
@@ -79,8 +78,7 @@ services:
 
   ojs:
     <<: *common
-    image: ghcr.io/lehigh-university-libraries/ojs:main
-    build: .
+    image: ghcr.io/lehigh-university-libraries/ojs:php83
     environment:
       OJS_OAI_REPOSITORY_ID: ${DOMAIN:-localhost}
       OJS_ENABLE_BEACON: 1
@@ -90,6 +88,9 @@ services:
       INGRESS_HOSTNAMES: ${DOMAIN:-localhost}
       INGRESS_SCHEME: https
       DB_HOST: ${DB_HOST:-mariadb}
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_NAME: ${DB_NAME:-ojs}
+      DB_USER: ${DB_USER:-ojs}
     secrets:
       - source: OJS_API_KEY_SECRET
       - source: OJS_SECRET_KEY
@@ -101,43 +102,13 @@ services:
       - ojs-cache:/var/www/ojs/cache:rw
       - ojs-files:/var/www/files:rw
       - ojs-public:/var/www/ojs/public:rw
-    depends_on:
-      database-init:
-        condition: service_completed_successfully
-      mariadb:
-        condition: service_healthy
+      - ./plugins/importexport/quickSubmit:/var/www/ojs/plugins/importexport/quickSubmit:ro
+      - ./plugins/themes/healthSciences:/var/www/ojs/plugins/themes/healthSciences:ro
+      - ./plugins/themes/lehigh:/var/www/ojs/plugins/themes/lehigh:ro
+      - ./plugins/themes/lrsj:/var/www/ojs/plugins/themes/lrsj:ro
     healthcheck:
       test: ["CMD-SHELL", "test -f /installed && grep -q '^installed = On' /var/www/ojs/config.inc.php && wget -q --spider http://localhost/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 10
       start_period: 10m
-
-  database-init:
-    image: libops/base:3.2.2.0@sha256:aa0c61029734f3293bca068a95c72c0b07ac949292c446c83ada78e81a42c85d
-    restart: "no"
-    networks:
-      default:
-    environment:
-      DB_HOST: mariadb
-      DB_PORT: "3306"
-      DB_NAME: ojs
-      DB_USER: ojs
-      DB_CHARACTER_SET: utf8
-      DB_COLLATION: utf8_general_ci
-    secrets:
-      - source: DB_ROOT_PASSWORD
-      - source: OJS_DB_PASSWORD
-        target: DB_PASSWORD
-    entrypoint: /usr/local/bin/init-database.sh
-    depends_on:
-      mariadb:
-        condition: service_healthy
-
-  mariadb:
-    <<: *common
-    image: libops/mariadb:11@sha256:7e0eb90c7cba204b62e8bed72fba00193cbc2e50072fc6e40a6fab8de4b0b857
-    volumes:
-      - mariadb-data:/var/lib/mysql:rw
-    secrets:
-      - source: DB_ROOT_PASSWORD
