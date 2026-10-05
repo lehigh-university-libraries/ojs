@@ -173,7 +173,7 @@
 				</span>
 				<div class="value">
 					{foreach name="keywords" from=$publication->getLocalizedData('keywords') item="keyword"}
-						<span class="badge bg-primary me-2 mb-2">{$keyword|escape}</span>
+						<span class="badge bg-primary me-2 mb-2">{$keyword.name|escape}</span>
 					{/foreach}
 				</div>
 			</section>

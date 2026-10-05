@@ -288,7 +288,7 @@
 						</h2>
 						<div class="article-details-keywords-value">
 							{foreach name=keywords from=$publication->getLocalizedData('keywords') item=keyword}
-								<span>{$keyword|escape}</span>{if !$smarty.foreach.keywords.last}<br>{/if}
+								<span>{$keyword.name|escape}</span>{if !$smarty.foreach.keywords.last}<br>{/if}
 							{/foreach}
 						</div>
 					</div>
