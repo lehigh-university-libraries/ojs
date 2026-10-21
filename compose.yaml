@@ -88,7 +88,7 @@ services:
 
   ojs:
     <<: *common
-    image: ghcr.io/lehigh-university-libraries/ojs:php83@sha256:4b38f2f159edc3c7603b8901b15dd5ac4416fd9879b3962e330ac71608415774
+    image: ghcr.io/lehigh-university-libraries/ojs:php83@sha256:e8bcff41e0b5ac768d986349d81aac9d9a985885b3e3066df91eef7134b71880
     environment:
       OJS_OAI_REPOSITORY_ID: ${DOMAIN:-localhost}
       OJS_ENABLE_BEACON: 1
