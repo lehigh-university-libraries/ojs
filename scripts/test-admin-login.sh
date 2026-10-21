@@ -2,7 +2,7 @@
 set -euo pipefail
 
 target_url="${SITE_URL:-http://localhost:8888}"
-password=$(<secrets/OJS_ADMIN_PASSWORD)
+password=$(docker compose exec -T --user root ojs cat /run/secrets/OJS_ADMIN_PASSWORD)
 cookies=$(mktemp)
 trap 'rm -f "$cookies"' EXIT
 
