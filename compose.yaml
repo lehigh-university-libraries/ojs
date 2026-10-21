@@ -33,7 +33,7 @@ secrets:
 
 services:
   init:
-    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:dcda155385ed3811e6192f6b663b978154c9621bb8edc6c863512d9b6de13182
+    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:c765405d6897c765f13c8262eba18905e7d8848b77ce4604e34f67faba3bd006
     restart: "no"
     working_dir: /work
     environment:
@@ -59,7 +59,7 @@ services:
 
   traefik:
     <<: *common
-    image: traefik:v3.7.13@sha256:24841fe2de7304c149343d877d2923b4c8800a38ba015dea9174c23b20e344a0
+    image: traefik:v3.7.16@sha256:6d3e069ee484ab1da5adfdda555a75eb9b1545ef09096a0cc7c3043101986a20
     command:
       - --ping=true
       - --entrypoints.web.address=:80
@@ -88,7 +88,7 @@ services:
 
   ojs:
     <<: *common
-    image: ghcr.io/lehigh-university-libraries/ojs:php83@sha256:d5c5ffefd94ef0ad1ee00b5a760b050d114ca49832c2f0765e9ab9afd039220c
+    image: ghcr.io/lehigh-university-libraries/ojs:php83@sha256:e8bcff41e0b5ac768d986349d81aac9d9a985885b3e3066df91eef7134b71880
     environment:
       OJS_OAI_REPOSITORY_ID: ${DOMAIN:-localhost}
       OJS_ENABLE_BEACON: 1
