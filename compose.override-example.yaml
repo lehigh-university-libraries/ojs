@@ -27,13 +27,13 @@ services:
       mariadb:
         condition: service_healthy
   mailpit:
-    image: axllent/mailpit:v1.33@sha256:9b3a463be15354c0f0eba91697d80e3e0d8a5623ef0e627cacc836bc17fd5231
+    image: axllent/mailpit:v1.33@sha256:aef2aacc11f075ec0fb6874275ee4a421e688e11a96ebb296134d1735c7761ce
     ports:
       - "1025:1025"
       - "8025:8025"
 
   database-init:
-    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:ef0180626ed02070bc50a01bb9cd3ce600905f6577c50977d22f13f8755ec877
+    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:69b0fc2ab80b3d8d25a39009cdb31fef9c586e66da675e7fe3108cad106135bd
     restart: "no"
     networks:
       default:
@@ -55,7 +55,7 @@ services:
 
   mariadb:
     restart: unless-stopped
-    image: ghcr.io/lehigh-university-libraries/mariadb:11@sha256:00c7a0f9e237b5285d40749c76010c054252c5f38c9888729979aa0e6537177e
+    image: ghcr.io/lehigh-university-libraries/mariadb:11@sha256:c326a24e0df4016ac84c1b0597ec16cd27086a2a4a5430e244b9161859243106
     volumes:
       - mariadb-data:/var/lib/mysql:rw
     secrets:

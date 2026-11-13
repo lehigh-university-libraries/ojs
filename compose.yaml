@@ -33,7 +33,7 @@ secrets:
 
 services:
   db-backup:
-    image: ghcr.io/lehigh-university-libraries/mysql-backup:main@sha256:9c2d1fa98f8877eab68ecab826111febd1386805b2fe98a19697c2e7f1827290
+    image: ghcr.io/lehigh-university-libraries/mysql-backup:main@sha256:f74c8f6f904cb55489d3b050b004d9be1ab155b3402679e0d9ea39b1df05d9f4
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -50,7 +50,7 @@ services:
       - ./backups:/db
 
   init:
-    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:ef0180626ed02070bc50a01bb9cd3ce600905f6577c50977d22f13f8755ec877
+    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:69b0fc2ab80b3d8d25a39009cdb31fef9c586e66da675e7fe3108cad106135bd
     restart: "no"
     working_dir: /work
     environment:
@@ -76,7 +76,7 @@ services:
 
   traefik:
     <<: *common
-    image: traefik:v3.7.17@sha256:f4bb143d1135a579b630ed491e17ec50f6f7c9c6a30585ff3d385471d2a86f5a
+    image: traefik:v3.7.19@sha256:aa942a00bce033c909bf1f7e861d93761be4b31a035f10d2410d33e38a8f41cf
     command:
       - --ping=true
       - --entrypoints.web.address=:80
