@@ -5,7 +5,7 @@ Docker Compose deployment of [Open Journal Systems](https://pkp.sfu.ca/software/
 # Requirements
 
 - [Docker 24.0+](https://docs.docker.com/get-docker/) **Referring to the Docker Engine version, not Docker Desktop**.
-- [Docker Compose](https://docs.docker.com/compose/install/linux/) **Already included in Mac OS with Docker**
+- [Docker Compose 2.24.4+](https://docs.docker.com/compose/install/linux/) **Already included in Mac OS with Docker**
 
 ## Quick Start (local development)
 
@@ -23,6 +23,8 @@ make up
 ```
 
 3. Access OJS at http://localhost:8888
+
+The development override clears the production IPAM settings so Docker allocates a local subnet without reserving `172.23.0.0/16`. Existing local overrides copied before this change need the same `networks.default.ipam: !reset null` entry.
 
 The development override supplies Cloudflare's public Turnstile test keys. Production must use real `TURNSTILE_PUBLIC_KEY` and `TURNSTILE_PRIVATE_KEY` values in `.env`.
 
@@ -83,6 +85,162 @@ COMPOSE_FILE=compose.yaml make deps up
 ```
 
 The PR renames `docker-compose.yaml` to `compose.yaml` and moves plugin sources from `rootfs/var/www/ojs/plugins/` to `plugins/`. Update any deployment overrides that reference the old paths, and keep the existing Compose project name so named data volumes are reused. When the application version changes, follow the [application upgrade rollout](#application-upgrade-rollout) below. Startup does not perform schema upgrades.
+
+### HAProxy and Galera on the Docker host
+
+When HAProxy runs on the same Linux VM, set `DB_HOST=host.docker.internal` and
+`DB_PORT=3306`. The app service maps that hostname using Docker's `host-gateway`.
+On a standard Linux Engine this is the daemon's default bridge gateway, which is
+separate from OJS's Compose bridge (`172.23.0.1`). Confirm the actual address:
+
+```sh
+docker network inspect bridge --format '{{(index .IPAM.Config 0).Gateway}}'
+ip -4 address show docker0
+sudo ss -ltnp '( sport = :3306 )'
+```
+
+Configure the existing HAProxy MySQL frontend to bind that gateway address and
+port. Do not substitute `127.0.0.1` (unreachable from a bridge container) or a
+project bridge that only appears after `docker compose up`. Keep the frontend
+private and verify the host firewall permits the application containers. Avoid
+binding MySQL to all interfaces just to solve boot ordering. These instructions
+assume a conventional Docker default bridge; hosts with it disabled or a custom
+`host-gateway-ip` need an explicitly managed listener address instead.
+
+This failure was confirmed on `ojs-vm`: HAProxy attempted `172.23.0.1:3306`
+before that address existed, failed five starts within two seconds, and reached
+systemd's start limit. A later restart succeeded. The packaged unit orders
+`network-online.target` but not Docker, and has no restart delay.
+
+If HAProxy is bound to a Compose-created gateway, it can fail with "Cannot assign
+requested address" on a fresh boot. Ordering it after Docker does not create
+that project network. Ordering the application after HAProxy then creates a cycle:
+the application creates the address HAProxy needs before it can start. Prefer the
+stable daemon bridge above. If IT retains a custom bridge listener, provision the
+network in a separate host-managed unit before HAProxy, declare it external in
+Compose, and keep it when bringing application containers down.
+
+For the default-bridge listener, an example HAProxy drop-in at
+`/etc/systemd/system/haproxy.service.d/docker.conf` is:
+
+```ini
+[Unit]
+Requires=docker.service
+Wants=network-online.target
+After=docker.service network-online.target
+
+[Service]
+RestartSec=5s
+```
+
+A minimal drop-in that preserves the packaged restart policy is supplied as
+`scripts/systemd/haproxy-docker.conf`. After reviewing the current unit, an operator
+can install it with:
+
+```sh
+sudo install -d /etc/systemd/system/haproxy.service.d
+sudo install -m 0644 scripts/systemd/haproxy-docker.conf /etc/systemd/system/haproxy.service.d/docker.conf
+sudo systemctl daemon-reload
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+sudo systemctl reset-failed haproxy
+sudo systemctl restart haproxy
+```
+
+Ordering after Docker fixes the missing dependency during normal reboot when the
+bridge is restored; the delay prevents immediate retries from exhausting the start
+limit. It does not create a missing project bridge on a new deployment. For the
+long-term host-gateway approach, first verify the default bridge address, add it
+to the HAProxy MySQL listener, reload HAProxy, and verify application connectivity
+using `DB_HOST=host.docker.internal`. Only then remove the old `172.23.0.1` bind.
+Keep `127.0.0.1:3306` if host processes use it. Review firewall rules during the
+address change.
+
+Review the installed unit and existing drop-ins before applying this example.
+`network-online.target` does not wait for a Compose bridge or for Galera readiness.
+The desired host ordering is Docker, then HAProxy, then the application startup
+unit. Application startup can add `Requires=haproxy.service` and
+`After=haproxy.service`; do not also order HAProxy after that application unit.
+Docker restart policies can bring containers back before an application systemd
+unit runs, so applications still need database retries. The supplied `ojs.service`
+currently orders only Docker and runs `compose up -d`; it does not implement this
+HAProxy ordering or wait for healthy application containers.
+
+Keep the existing Galera backend configuration under IT management. Backend checks
+must identify a writable node in the Primary component with `wsrep_ready=ON` and
+`wsrep_connected=ON`; a TCP-open check alone cannot establish Galera readiness.
+Use the cluster's established health-check mechanism and failover policy. The
+application account needs its own database permissions, not administrative access.
+OJS's PHP readiness probe uses that account and `SELECT 1`; it complements rather
+than replaces the Galera-aware backend checks.
+
+Collect evidence before changing a failing VM:
+
+```sh
+systemctl cat docker haproxy ojs
+systemctl show haproxy -p After -p Requires -p Wants
+journalctl -b -u docker -u haproxy -u ojs --no-pager
+docker network ls
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+COMPOSE_FILE=compose.yaml docker compose logs --tail=100 ojs
+```
+
+After an approved host change, verify a cold reboot, an application redeploy, a
+Docker daemon restart, and loss/recovery of a Galera backend. Confirm HAProxy's
+listener exists, the application can query through it, and port 3306 remains
+unreachable from public interfaces. Never run these disruption tests against
+production without a planned maintenance window.
+
+References: [Docker host networking in Compose](https://docs.docker.com/compose/how-tos/networking/),
+[systemd unit dependencies](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html),
+and [systemd network targets](https://systemd.io/NETWORK_ONLINE/).
+
+
+#### Pin the host gateway
+
+This host configuration is for production Linux VMs only. Do not apply it to
+Docker Desktop or a local development engine; the application Compose overrides
+do not change daemon settings.
+
+The Linux VM standard is an explicit Docker default-bridge address of
+`172.17.0.1/16`. Merge the setting from `scripts/docker/daemon.example.json`
+into `/etc/docker/daemon.json`:
+
+```json
+{
+  "bip": "172.17.0.1/16"
+}
+```
+
+Preserve all other daemon settings, including an existing `data-root`. Do not
+copy this fragment over an existing daemon configuration. Confirm the subnet
+does not overlap host routes or other Docker networks, and reconcile any
+`bridge`, `--bip`, or custom `host-gateway-ip` configuration. Do not assign this
+same subnet to a Compose network.
+
+After an approved Docker restart, verify `docker0` and `docker network inspect
+bridge` show `172.17.0.1`. Compose continues using
+`host.docker.internal:host-gateway`, which resolves to this daemon-level address
+on these Linux VMs. Application networks can remain separate; OJS's existing
+`172.23.0.1` project gateway is not this database listener address.
+
+In the existing HAProxy `mysql-cluster` listener, retain the host loopback bind
+if needed and use the pinned gateway:
+
+```haproxy
+bind 127.0.0.1:3306
+bind 172.17.0.1:3306
+```
+
+Keep the existing Galera servers and health checks. Add and test the new bind
+and application connection before removing the old `172.23.0.1` bind. On a
+running VM, perform this migration only when the new address already exists;
+otherwise HAProxy will reject the reload. The systemd drop-in orders HAProxy
+after Docker so the pinned address is available at boot, independent of any
+application Compose project. Apply daemon changes in a maintenance window;
+`make up` does not alter host networking.
+
+Docker documents the daemon's [`bip` setting](https://docs.docker.com/engine/network/drivers/bridge/#configure-the-default-bridge-network)
+and [`host-gateway` resolution](https://docs.docker.com/reference/cli/dockerd/#configure-host-gateway-ip).
 
 ### Nginx and PHP Settings
 
@@ -201,3 +359,18 @@ make up
 ## License
 
 This Docker implementation is provided as-is. Open Journal Systems is licensed under the GNU General Public License v3. See the [OJS repository](https://github.com/pkp/ojs) for details.
+
+## Database backup copies
+
+`db-backup` runs at 02:00 UTC, writing compressed SQL to `./backups/daily/`
+and the latest successful dump of each month to `./backups/monthly/`.
+It retains seven daily dates and the previous twelve completed months, plus the
+current month's latest copy. Pruning runs only after a successful dump.
+SET backs up Galera every 30 days; these additional copies are a LOCKSS
+(Lots of Copies Keep Stuff Safe) precaution. They cover the configured application
+database; uploaded files and other volumes still need their own backups.
+
+The backup image is pinned by digest directly in Compose. Update that reference
+when promoting a new published Buildkit `mysql-backup` image.
+For an immediate dump: `docker compose exec db-backup /command/with-contenv mysql-backup.sh`.
+See Buildkit's `images/mysql-backup/README.md` for restore instructions and limits.

@@ -7,9 +7,18 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
+	"net/netip"
+	"sort"
 	"sync"
 	"time"
 )
+
+var GoogleCrawlerIPRangeURLs = []string{
+	"https://developers.google.com/static/search/apis/ipranges/googlebot.json",
+	"https://developers.google.com/static/crawling/ipranges/common-crawlers.json",
+	"https://developers.google.com/static/crawling/ipranges/special-crawlers.json",
+	"https://developers.google.com/static/crawling/ipranges/user-triggered-fetchers-google.json",
+}
 
 // GooglebotIPs holds the list of Googlebot IP ranges, providing a thread-safe way to check if an IP is a Googlebot.
 type GooglebotIPs struct {
@@ -69,6 +78,11 @@ func (g *GooglebotIPs) Contains(ip net.IP) bool {
 // FetchGooglebotIPs fetches the list of Googlebot IPs from Google's official endpoint,
 // parses the JSON response, and returns a slice of CIDR strings.
 func FetchGooglebotIPs(log *slog.Logger, httpClient *http.Client, url string) ([]string, error) {
+	return FetchGooglebotIPsContext(context.Background(), log, httpClient, url)
+}
+
+// FetchGooglebotIPsContext fetches Googlebot IPs and cancels the request with ctx.
+func FetchGooglebotIPsContext(parent context.Context, log *slog.Logger, httpClient *http.Client, url string) ([]string, error) {
 	log.Debug("Fetching Googlebot IPs")
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
@@ -76,7 +90,7 @@ func FetchGooglebotIPs(log *slog.Logger, httpClient *http.Client, url string) ([
 		return nil, fmt.Errorf("failed to create Googlebot IP request: %w", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(parent, 30*time.Second)
 	defer cancel()
 	req = req.WithContext(ctx)
 
@@ -107,4 +121,100 @@ func FetchGooglebotIPs(log *slog.Logger, httpClient *http.Client, url string) ([
 	}
 
 	return cidrs, nil
+}
+
+// FetchGoogleCrawlerIPs fetches crawler IP ranges from multiple Google-managed endpoints,
+// then returns a canonical, unique list where broader prefixes replace narrower prefixes.
+func FetchGoogleCrawlerIPs(log *slog.Logger, httpClient *http.Client, urls []string) ([]string, error) {
+	return FetchGoogleCrawlerIPsContext(context.Background(), log, httpClient, urls)
+}
+
+// FetchGoogleCrawlerIPsContext fetches all configured Google crawler ranges with cancellation.
+func FetchGoogleCrawlerIPsContext(ctx context.Context, log *slog.Logger, httpClient *http.Client, urls []string) ([]string, error) {
+	if len(urls) == 0 {
+		return nil, nil
+	}
+
+	allCIDRs := make([]string, 0)
+	for _, url := range urls {
+		cidrs, err := FetchGooglebotIPsContext(ctx, log, httpClient, url)
+		if err != nil {
+			return nil, err
+		}
+		allCIDRs = append(allCIDRs, cidrs...)
+	}
+
+	return ReduceCIDRs(allCIDRs, log), nil
+}
+
+// RefreshGoogleCrawlerIPs fetches crawler IPs from all configured URLs and updates
+// the provided GooglebotIPs set. Returns the number of CIDRs loaded.
+func RefreshGoogleCrawlerIPs(log *slog.Logger, httpClient *http.Client, target *GooglebotIPs, urls []string) (int, error) {
+	return RefreshGoogleCrawlerIPsContext(context.Background(), log, httpClient, target, urls)
+}
+
+// RefreshGoogleCrawlerIPsContext refreshes the active crawler ranges with cancellation.
+func RefreshGoogleCrawlerIPsContext(ctx context.Context, log *slog.Logger, httpClient *http.Client, target *GooglebotIPs, urls []string) (int, error) {
+	cidrs, err := FetchGoogleCrawlerIPsContext(ctx, log, httpClient, urls)
+	if err != nil {
+		return 0, err
+	}
+
+	target.Update(cidrs, log)
+
+	return len(cidrs), nil
+}
+
+// ReduceCIDRs canonicalizes CIDRs, removes exact duplicates, and removes narrower
+// ranges when they are fully covered by broader ranges.
+func ReduceCIDRs(cidrs []string, log *slog.Logger) []string {
+	prefixes := make([]netip.Prefix, 0, len(cidrs))
+	for _, cidr := range cidrs {
+		prefix, err := netip.ParsePrefix(cidr)
+		if err != nil {
+			if log != nil {
+				log.Error("error parsing CIDR", "cidr", cidr, "err", err)
+			}
+			continue
+		}
+		prefixes = append(prefixes, prefix.Masked())
+	}
+
+	sort.Slice(prefixes, func(i, j int) bool {
+		a := prefixes[i]
+		b := prefixes[j]
+
+		aIs4 := a.Addr().Is4()
+		bIs4 := b.Addr().Is4()
+		if aIs4 != bIs4 {
+			return aIs4
+		}
+
+		if a.Bits() != b.Bits() {
+			return a.Bits() < b.Bits()
+		}
+
+		return a.Addr().Compare(b.Addr()) < 0
+	})
+
+	reduced := make([]netip.Prefix, 0, len(prefixes))
+	for _, candidate := range prefixes {
+		covered := false
+		for _, existing := range reduced {
+			if existing.Bits() <= candidate.Bits() && existing.Contains(candidate.Addr()) {
+				covered = true
+				break
+			}
+		}
+		if !covered {
+			reduced = append(reduced, candidate)
+		}
+	}
+
+	result := make([]string, 0, len(reduced))
+	for _, prefix := range reduced {
+		result = append(result, prefix.String())
+	}
+
+	return result
 }

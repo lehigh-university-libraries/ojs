@@ -22,6 +22,8 @@ http:
           window: 864000
           protectRoutes: /
           protectParameters: "true"
+          excludeRoutes:
+            - /google204a4e549d4da46a.html
           exemptIps:
             # Lehigh range
             - 128.180.0.0/16
@@ -51,6 +53,7 @@ http:
           persistentStateFile: /tmp/state.json
           protectFileExtensions: pdf
           enableGooglebotIPCheck: "true"
+          enableUptimeRobotBypass: "true"
           periodSeconds: 30
           failureThreshold: 3
           ipForwardedHeader: "X-Forwarded-For"

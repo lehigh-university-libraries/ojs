@@ -4,3 +4,5 @@ secrets
 compose.override.yaml
 tmp/traefik
 !tmp/traefik/.keep
+
+backups/

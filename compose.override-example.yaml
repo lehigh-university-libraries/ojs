@@ -1,8 +1,15 @@
 ---
+# Local projects must not reserve the production subnet/gateway.
+networks:
+  default:
+    ipam: !reset null
+
 volumes:
   mariadb-data: {}
 
 services:
+  db-backup:
+    profiles: [none]
   traefik:
     environment:
       # Public test keys, never use this override in production.
