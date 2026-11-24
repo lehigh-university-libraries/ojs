@@ -20,12 +20,10 @@
                                             <img src="{$publicFilesDir}/{$journalLogo.uploadName|escape:"url"}" {if $journalLogo.altText}alt="{$journalLogo.altText|escape}"{else}alt="{$currentJournal->getLocalizedName()|escape}"{/if}
                                                 width="300px" />
                                         {else}
-                                            <img src="https://lehigh.edu/~inltswms/images/logos/lehighuniversity-lts-wordmark.svg"
-                                                width="300px" height="43" alt="Lehigh University" />
+                                            <img style="width: auto; max-width: 100%; height: 74px;" src="https://library.lehigh.edu/themes/custom/leh_storybook/libraries.svg" alt="Lehigh University" />
                                         {/if}
                                     {else}
-                                        <img src="https://lehigh.edu/~inltswms/images/logos/lehighuniversity-lts-wordmark.svg"
-                                            width="300px" height="43" alt="Lehigh University" />
+                                        <img style="width: auto; max-width: 100%; height: 74px;" src="https://library.lehigh.edu/themes/custom/leh_storybook/libraries.svg" alt="Lehigh University" />
                                     {/if}
                                 </div>
                                 <!-- utility-nav--start -->
