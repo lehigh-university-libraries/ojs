@@ -33,7 +33,7 @@ services:
       - "8025:8025"
 
   database-init:
-    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:ed9cf4f9b330aad97ab926fca42c014b1aa449e2c1c1bf6228a6f2016de047fd
+    image: ghcr.io/lehigh-university-libraries/base:3.2.2.0@sha256:6e1ecf4a971623a5dd1f388d0628fc456190a0c200df6434bb249ac555b75726
     restart: "no"
     networks:
       default:
@@ -55,7 +55,7 @@ services:
 
   mariadb:
     restart: unless-stopped
-    image: ghcr.io/lehigh-university-libraries/mariadb:11@sha256:9509a907b9fd10738f9cb163f6437336638139727b2be82b4d91a2449766430c
+    image: ghcr.io/lehigh-university-libraries/mariadb:11@sha256:6dd15ed88eee9ed69fa06ff0036188c0edaee006737e56e937de440158b64c73
     volumes:
       - mariadb-data:/var/lib/mysql:rw
     secrets:
